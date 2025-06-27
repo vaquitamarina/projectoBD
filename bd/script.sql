@@ -2,5 +2,54 @@ CREATE DATABASE IF NOT EXISTS SistemaTransporte;
 USE SistemaTransporte;
 
 CREATE TABLE IF NOT EXISTS Usuario (
-    id 
+    idUsuario INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(10) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS PASAJERO (
+    idPasajero INT AUTO_INCREMENT PRIMARY KEY,
+    nombres VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    fechaDeNacimiento DATE,
+    sexo CHAR(1),
+    dni CHAR(8) UNIQUE,   
+);
+
+CREATE TABLE IF NOT EXISTS TRABAJADOR (
+    idTrabajador INT AUTO_INCREMENT PRIMARY KEY,
+    nombres VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(50) NOT NULL,
+    sexo CHAR(1) NOT NULL,
+    dni CHAR(8) UNIQUE,
+);
+
+CREATE TABLE IF NOT EXISTS BUS (
+    placa VARCHAR(10) AUTO_INCREMENT PRIMARY KEY,
+    clase VARCHAR(20) NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    nAsientos INT NOT NULL, 
+);
+
+CREATE TABLE IF NOT EXISTS VIAJE (
+    idViaje INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    hInicio TIME NOT NULL,
+    hFinal TIME NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS ASIENTO (
+    idAsiento INT AUTO_INCREMENT PRIMARY KEY,
+    numeroAsiento INT NOT NULL,
+    piso INT NOT NULL,
+    estado CHAR(1) NOT NULL,
+    placaBus VARCHAR(10),
+);
+
+CREATE TABLE IF NOT EXISTS RUTAS (
+    idRutas INT AUTO_INCREMENT PRIMARY KEY,
+    ciudadOrigen VARCHAR(50) NOT NULL,
+    ciudadFinal VARCHAR(50) NOT NULL,
 );
