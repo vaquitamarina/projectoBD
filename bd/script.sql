@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS PASAJERO (
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     fechaDeNacimiento DATE,
-    sexo CHAR(1),
+    sexo CHAR(1) NOT NULL,
     dni CHAR(8) UNIQUE,   
 );
 
