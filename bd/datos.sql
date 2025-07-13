@@ -1,4 +1,4 @@
--- Active: 1752371063069@@127.0.0.1@3308@SistemaTransporte
+-- Active: 1752375211800@@127.0.0.1@3306@SistemaTransporte
 -- 📌 BUS
 INSERT INTO bus (placa, clase, estado, nAsientos) VALUES
 ('ABC123', 'VIP', 'Disponible', 40),       -- idBus = 1
@@ -67,4 +67,4 @@ INSERT INTO asiento (numeroAsiento, piso, estado, idBus) VALUES
 
 -- Bus 3 (LMN456)
 INSERT INTO asiento (numeroAsiento, piso, estado, idBus) VALUES
-(1, 1, '0', 3), (2, 1, '0', 3), (3, 2, '0idAsiento', 3);
+(1, 1, '0', 3), (2, 1, '0', 3), (3, 2, '0', 3);
