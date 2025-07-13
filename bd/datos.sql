@@ -1,4 +1,4 @@
--- Active: 1752371063069@@127.0.0.1@3306@SistemaTransporte
+-- Active: 1752371063069@@127.0.0.1@3308@SistemaTransporte
 -- 📌 BUS
 INSERT INTO bus (placa, clase, estado, nAsientos) VALUES
 ('ABC123', 'VIP', 'Disponible', 40),       -- idBus = 1
