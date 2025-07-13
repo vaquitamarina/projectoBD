@@ -1,4 +1,3 @@
 <?php
-include "controller/view.php";
-
+require_once("bd/config.php");
 ?> 
