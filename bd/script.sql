@@ -99,10 +99,10 @@ CREATE TABLE IF NOT EXISTS ticket (
 
 CREATE TABLE IF NOT EXISTS viajeRuta (
     idViaje INT NOT NULL,
-    idRutas INT NOT NULL,
-    PRIMARY KEY (idViaje, idRutas), 
+    idRuta INT NOT NULL,
+    PRIMARY KEY (idViaje, idRuta), 
     FOREIGN KEY (idViaje) REFERENCES viaje(idViaje),
-    FOREIGN KEY (idRutas) REFERENCES ruta(idRutas)
+    FOREIGN KEY (idRuta) REFERENCES ruta(idRuta)
 );
 
 CREATE TABLE IF NOT EXISTS viajeBus (
