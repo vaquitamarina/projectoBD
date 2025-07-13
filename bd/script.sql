@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS asiento (
     numeroAsiento INT NOT NULL,
     piso INT NOT NULL,
     estado CHAR(1) NOT NULL,
-    idBus INT, NOT NULL,
+    idBus INT NOT NULL,
     FOREIGN KEY (idBus) REFERENCES bus(idBus)
 );
 
@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS ticket (
     FOREIGN KEY (idPasajero) REFERENCES pasajero(idPasajero),
     FOREIGN KEY (idViaje) REFERENCES viaje(idViaje),
     FOREIGN KEY (idAsiento) REFERENCES asiento(idAsiento),
-    FOREIGN KEY (idBoletero) REFERENCES boletero(idTrabajador)
-    FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario)
+    FOREIGN KEY (idBoletero) REFERENCES boletero(idTrabajador),
+    FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario),
     CONSTRAINT chk_comprador CHECK ( 
         (idBoletero IS NOT NULL AND idUsuario IS NULL) OR
         (idBoletero IS NULL AND idUsuario IS NOT NULL)
