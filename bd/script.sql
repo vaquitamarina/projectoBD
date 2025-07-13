@@ -1,5 +1,4 @@
--- Active: 1752375211800@@127.0.0.1@3306@SistemaTransporte
-DROP DATABASE IF EXISTS SistemaTransporte;
+-- Active: 1752375211800@@127.0.0.1@3306@sistematransporte
 CREATE DATABASE IF NOT EXISTS SistemaTransporte;
 USE SistemaTransporte;
 
