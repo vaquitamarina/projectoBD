@@ -7,7 +7,7 @@ class Modelo{
         $this->db = new Conexion();
         $this->db = $this->db->conect();
     }
-    
+    //error de conversion de arrays a strings
     public function insert($tabla, $campos, $valores){
         $consulta = "INSERT INTO {$tabla} ({$campos}) VALUES ({$valores})";
         try {

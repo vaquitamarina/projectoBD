@@ -15,6 +15,7 @@ class ModelController{
     }
     public function select(){
         $data = $this->model->getTables();
+        $registros = null;
         if (isset($_POST['accion']) && $_POST['accion'] === 'getRegister' && !empty($_POST['selectedTable'])) {
                 $selectedTable = $_POST['selectedTable'];
 
@@ -36,7 +37,7 @@ class ModelController{
         if ($result) {
             $_POST['accion'] = 'getRegister';
             $_POST['selectedTable'] = $table;
-            $this->select();
+            echo "fila añadida correctamente";
         } else {
             $error = "Error al insertar el registro";
             $this->renderView("select", null, null);
