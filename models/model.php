@@ -1,20 +1,14 @@
 <?php
+require_once("config/db.php");
 class Modelo{
     private $db;
-    private $registros;
     
     public function __construct(){
-        $this->registros = array();
-        try {
-            $this->db = new PDO('mysql:host=localhost;dbname=sistematransporte;charset=utf8', "root", "");
-            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $e) {
-            die("Error de conexión: " . $e->getMessage());
-        }
+        $this->db = new Conexion();
+        $this->db = $this->db->conect();
     }
     
-    // CREATE - Insertar con campos específicos
-    public function insertar($tabla, $campos, $valores){
+    public function insert($tabla, $campos, $valores){
         $consulta = "INSERT INTO {$tabla} ({$campos}) VALUES ({$valores})";
         try {
             $stmt = $this->db->prepare($consulta);
@@ -25,8 +19,7 @@ class Modelo{
         }
     }
     
-    // READ - Mostrar todos los registros
-    public function mostrarTodos($tabla){
+    public function getAll($tabla){
         $consulta = "SELECT * FROM {$tabla}";
         try {
             $resultado = $this->db->query($consulta);
@@ -37,7 +30,7 @@ class Modelo{
     }
     
     // READ - Mostrar con condición
-    public function mostrar($tabla, $condicion = "1=1"){
+    public function get($tabla, $condicion = "1=1"){
         $consulta = "SELECT * FROM {$tabla} WHERE {$condicion}";
         try {
             $resultado = $this->db->query($consulta);
@@ -47,8 +40,7 @@ class Modelo{
         }
     }
     
-    // READ - Mostrar un registro por ID
-    public function mostrarPorId($tabla, $id, $campoId = 'id'){
+    public function getbyId($tabla, $id, $campoId = 'id'){
         $consulta = "SELECT * FROM {$tabla} WHERE {$campoId} = :id";
         try {
             $stmt = $this->db->prepare($consulta);
@@ -60,8 +52,7 @@ class Modelo{
         }
     }
     
-    // UPDATE - Actualizar
-    public function actualizar($tabla, $data, $condicion){
+    public function update($tabla, $data, $condicion){
         $consulta = "UPDATE {$tabla} SET {$data} WHERE {$condicion}";
         try {
             $stmt = $this->db->prepare($consulta);
@@ -71,8 +62,7 @@ class Modelo{
         }
     }
     
-    // DELETE - Eliminar
-    public function eliminar($tabla, $condicion){
+    public function delete($tabla, $condicion){
         $consulta = "DELETE FROM {$tabla} WHERE {$condicion}";
         try {
             $stmt = $this->db->prepare($consulta);
@@ -82,12 +72,21 @@ class Modelo{
         }
     }
     
-    // Método para consultas personalizadas
     public function consultaPersonalizada($consulta, $params = []){
         try {
             $stmt = $this->db->prepare($consulta);
             $stmt->execute($params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+
+    public function getTables(){
+        $consulta = "SHOW TABLES";
+        try {
+            $resultado = $this->db->query($consulta);
+            return $resultado->fetchAll(PDO::FETCH_COLUMN);
         } catch(PDOException $e) {
             return false;
         }
