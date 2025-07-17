@@ -36,16 +36,30 @@ class formController {
             if (isset($rules['foreign_key'])) {
                 $html .= $this->generateForeignKeySelect($field, $rules);
             } else {
-                // Generar input según el tipo
                 switch ($rules['type']) {
                     case 'email':
                         $html .= "<input type='email' id='$field' name='$field'";
+                        if (isset($rules['required']) && $rules['required']) {
+                            $html .= " required";
+                        }
+                        if (isset($rules['max_length'])) {
+                            $html .= " maxlength='{$rules['max_length']}'";
+                        }
+                        $html .= ">";
                         break;
                     case 'date':
                         $html .= "<input type='date' id='$field' name='$field'";
+                        if (isset($rules['required']) && $rules['required']) {
+                            $html .= " required";
+                        }
+                        $html .= ">";
                         break;
                     case 'time':
                         $html .= "<input type='time' id='$field' name='$field'";
+                        if (isset($rules['required']) && $rules['required']) {
+                            $html .= " required";
+                        }
+                        $html .= ">";
                         break;
                     case 'int':
                         $html .= "<input type='number' id='$field' name='$field'";
@@ -55,6 +69,10 @@ class formController {
                         if (isset($rules['max_value'])) {
                             $html .= " max='{$rules['max_value']}'";
                         }
+                        if (isset($rules['required']) && $rules['required']) {
+                            $html .= " required";
+                        }
+                        $html .= ">";
                         break;
                     default:
                         if (isset($rules['allowed_values'])) {
@@ -75,16 +93,14 @@ class formController {
                             if (isset($rules['max_length'])) {
                                 $html .= " maxlength='{$rules['max_length']}'";
                             }
+                            if (isset($rules['required']) && $rules['required']) {
+                                $html .= " required";
+                            }
+                            $html .= ">";
                         }
                         break;
                 }
                 
-                if (!isset($rules['allowed_values'])) {
-                    if (isset($rules['required']) && $rules['required']) {
-                        $html .= " required";
-                    }
-                    $html .= ">";
-                }
             }
             
             $html .= "</div>";
