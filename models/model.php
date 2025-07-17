@@ -40,7 +40,6 @@ class Modelo{
         }
     }
     
-    // READ - Mostrar con condición
     public function get($tabla, $condicion = "1=1"){
         $consulta = "SELECT * FROM {$tabla} WHERE {$condicion}";
         try {
