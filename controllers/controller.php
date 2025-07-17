@@ -33,15 +33,18 @@ class ModelController{
         unset($row['insertTable']);
         unset($row['accion']);
         $column = array_keys($row);
+        $row = array_values($row);
         $result = $this->model->insert($table, $column, $row);
         if ($result) {
-            $_POST['accion'] = 'getRegister';
-            $_POST['selectedTable'] = $table;
-            echo "fila añadida correctamente";
+            // Mensaje de éxito en sesión
+            echo "<script>alert('Registro insertado correctamente');</script>";
+            header("Location: index.php?action=select&table=" . urlencode($table));
         } else {
-            $error = "Error al insertar el registro";
-            $this->renderView("select", null, null);
+            // Mensaje de error en sesión
+            echo "<script>alert('Error al insertar el registro');</script>";
+            header("Location: index.php?action=select");
         }
+        exit();          
     }    
 }
 

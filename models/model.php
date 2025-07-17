@@ -7,14 +7,25 @@ class Modelo{
         $this->db = new Conexion();
         $this->db = $this->db->conect();
     }
-    //error de conversion de arrays a strings
+
     public function insert($tabla, $campos, $valores){
-        $consulta = "INSERT INTO {$tabla} ({$campos}) VALUES ({$valores})";
+        if (!is_array($campos) || !is_array($valores)) {
+            throw new Exception("Los campos y valores deben ser arrays.");
+        }
+        $campos = implode(", ", $campos);
+        $placeholders = implode(", ", array_fill(0, count($valores), "?"));
+        $consulta = "INSERT INTO {$tabla} ({$campos}) VALUES ({$placeholders})";
         try {
             $stmt = $this->db->prepare($consulta);
-            $resultado = $stmt->execute();
-            return $resultado ? $this->db->lastInsertId() : false;
+            $resultado = $stmt->execute($valores);
+            if ($resultado) {
+                return $this->db->lastInsertId();
+            } else {
+                error_log("Error en insert: " . print_r($stmt->errorInfo(), true));
+                return false;
+            }
         } catch(PDOException $e) {
+            error_log("PDO Exception en insert: " . $e->getMessage());
             return false;
         }
     }
