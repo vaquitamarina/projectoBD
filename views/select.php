@@ -1,5 +1,5 @@
 <p>Seleccione una tabla para ver los registros:</p>
-<form method="post" action="index.php">
+<form method="post" action="crud.php">
     <select name="selectedTable">
         <option value="">-- Selecciona una tabla --</option>
         <?php
@@ -38,19 +38,12 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
                     <?php endforeach; ?>
                 </tr>
             <?php endforeach; ?>
-            <tr>
-                <form id="formAddRow" method="POST" action="index.php">
-                    <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>">
-                    <?php foreach (array_keys($registros[0]) as $columna): ?>
-                        <td> 
-                            <input name="<?= $columna ?>" placeholder="añadir <?= ucfirst($columna) ?>"/>
-                        </td>
-                    <?php endforeach; ?>
-                </form>
-            </tr>
         </tbody>
     </table>
-    <button form="formAddRow" type="submit" name="accion" value="addRow" >Añadir fila</button>
+    <form method="post" action="crud.php">
+        <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>"> 
+        <button type="submit" name="accion" value="addRow" >Añadir fila</button>
+    </form>
 <?php elseif (isset($_POST['selectedTable']) && !empty($_POST['selectedTable'])): ?>
     <p>No se encontraron registros en la tabla seleccionada.</p>
 <?php endif; ?>

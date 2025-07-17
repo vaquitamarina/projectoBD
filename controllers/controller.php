@@ -1,5 +1,5 @@
 <?php
-require_once("models/model.php");
+require_once("../models/model.php");
 
 class ModelController{
     private $model;
@@ -7,8 +7,8 @@ class ModelController{
         $this->model = new Modelo();
     }
     public function renderView($viewName, $data = null, $registros = null){
-        if (file_exists("views/{$viewName}.php")) {
-            require_once("views/{$viewName}.php");
+        if (file_exists("{$viewName}.php")) {
+            require_once("{$viewName}.php");
         } else {
             throw new Exception("Vista no encontrada: {$viewName}");
         }
@@ -27,6 +27,11 @@ class ModelController{
             }
         $this->renderView("select", $data, $registros);
     }
+    public function tableForm(){
+        $table = $_POST['insertTable'];
+        $this->renderView("form", $table);
+    }
+
     public function addRow(){
         $table = $_POST['insertTable'];
         $row = $_POST;
@@ -38,11 +43,11 @@ class ModelController{
         if ($result) {
             // Mensaje de éxito en sesión
             echo "<script>alert('Registro insertado correctamente');</script>";
-            header("Location: index.php?action=select&table=" . urlencode($table));
+            header("Location: http://localhost/proyectobd/views/crud.php?action=select&table=" . urlencode($table));
         } else {
             // Mensaje de error en sesión
             echo "<script>alert('Error al insertar el registro');</script>";
-            header("Location: index.php?action=select");
+            header("Location: http://localhost/proyectobd/views/crud.php?action=select");
         }
         exit();          
     }    
