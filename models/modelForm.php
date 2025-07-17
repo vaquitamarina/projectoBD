@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../config/db.php");
+require_once( __DIR__ . "/../config/db.php");
 
 class ModelForm{
     private $db;
@@ -74,9 +74,6 @@ class ModelForm{
         ];
     }
     
-    /**
-     * Valida los datos según el esquema de la tabla
-     */
     private function validateData($tableName, $data, $isUpdate = false){
         if (!isset($this->tableSchemas[$tableName])) {
             throw new Exception("Tabla '$tableName' no está configurada en el esquema");
