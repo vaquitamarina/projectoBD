@@ -414,6 +414,18 @@ class ModelForm{
         }
         return null;
     }
+
+    public function getForeignKeyOptions($tableName, $primaryKeyField) {
+        try {
+            $sql = "SELECT * FROM $tableName ORDER BY $primaryKeyField";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getForeignKeyOptions: " . $e->getMessage());
+            return [];
+        }
+    }
     
     /**
      * Obtiene todas las tablas disponibles
