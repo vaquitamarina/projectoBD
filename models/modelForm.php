@@ -315,7 +315,6 @@ public function delete($tableName, $id) {
     try {
         $primaryKey = $this->getPrimaryKey($tableName);
         
-        // Verificar si el registro existe
         $checkSql = "SELECT COUNT(*) FROM $tableName WHERE $primaryKey = ?";
         $checkStmt = $this->db->prepare($checkSql);
         $checkStmt->execute([$id]);
@@ -324,14 +323,11 @@ public function delete($tableName, $id) {
             return ['success' => false, 'errors' => ['not_found' => 'El registro no existe']];
         }
         
-        // Iniciar transacción para rollback en caso de error
         $this->db->beginTransaction();
         
         try {
-            // Eliminar registros relacionados primero
             $this->deleteRelatedRecords($tableName, $id);
             
-            // Eliminar el registro principal
             $sql = "DELETE FROM $tableName WHERE $primaryKey = ?";
             $stmt = $this->db->prepare($sql);
             $result = $stmt->execute([$id]);
