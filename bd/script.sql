@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS pasajero (
     sexo CHAR(1) NOT NULL,
     dni CHAR(8) UNIQUE
 );
+
 CREATE TABLE IF NOT EXISTS bus (
     idBus INT AUTO_INCREMENT PRIMARY KEY,
     placa VARCHAR(10) UNIQUE NOT NULL,
@@ -36,33 +37,33 @@ CREATE TABLE IF NOT EXISTS trabajador (
 
 CREATE TABLE IF NOT EXISTS boletero (
     idTrabajador INT PRIMARY KEY,
-    FOREIGN KEY (idTrabajador) REFERENCES Trabajador(idTrabajador)
+    FOREIGN KEY (idTrabajador) REFERENCES trabajador(idTrabajador) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS trabajadorBus (
     idTrabajador INT PRIMARY KEY,
     idBus INT NOT NULL,
-    FOREIGN KEY (idTrabajador) REFERENCES trabajador(idTrabajador),
-    FOREIGN KEY (idBus) REFERENCES bus(idBus)
+    FOREIGN KEY (idTrabajador) REFERENCES trabajador(idTrabajador) ON DELETE CASCADE,
+    FOREIGN KEY (idBus) REFERENCES bus(idBus) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS chofer(
     idTrabajador INT PRIMARY KEY,
     licencia CHAR(9) NOT NULL,
-    FOREIGN KEY (idTrabajador) REFERENCES trabajadorBus(idTrabajador)
+    FOREIGN KEY (idTrabajador) REFERENCES trabajadorBus(idTrabajador) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS terramozo(
     idTrabajador INT PRIMARY KEY,
-    FOREIGN KEY (idTrabajador) REFERENCES trabajadorBus(idTrabajador) 
+    FOREIGN KEY (idTrabajador) REFERENCES trabajadorBus(idTrabajador) ON DELETE CASCADE
 );
-
 
 CREATE TABLE IF NOT EXISTS viaje (
     idViaje INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     hInicio TIME NOT NULL,
-    hFinal TIME NOT NULL
+    hFinal TIME NOT NULL,
+    precio INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS asiento (
@@ -71,7 +72,7 @@ CREATE TABLE IF NOT EXISTS asiento (
     piso INT NOT NULL,
     estado CHAR(1) NOT NULL,
     idBus INT NOT NULL,
-    FOREIGN KEY (idBus) REFERENCES bus(idBus)
+    FOREIGN KEY (idBus) REFERENCES bus(idBus) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ruta (
@@ -87,11 +88,11 @@ CREATE TABLE IF NOT EXISTS ticket (
     idAsiento INT NOT NULL,
     idBoletero INT,
     idUsuario INT,
-    FOREIGN KEY (idPasajero) REFERENCES pasajero(idPasajero),
-    FOREIGN KEY (idViaje) REFERENCES viaje(idViaje),
-    FOREIGN KEY (idAsiento) REFERENCES asiento(idAsiento),
-    FOREIGN KEY (idBoletero) REFERENCES boletero(idTrabajador),
-    FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario),
+    FOREIGN KEY (idPasajero) REFERENCES pasajero(idPasajero) ON DELETE CASCADE,
+    FOREIGN KEY (idViaje) REFERENCES viaje(idViaje) ON DELETE CASCADE,
+    FOREIGN KEY (idAsiento) REFERENCES asiento(idAsiento) ON DELETE CASCADE,
+    FOREIGN KEY (idBoletero) REFERENCES boletero(idTrabajador) ON DELETE SET NULL,
+    FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario) ON DELETE SET NULL,
     CONSTRAINT chk_comprador CHECK ( 
         (idBoletero IS NOT NULL AND idUsuario IS NULL) OR
         (idBoletero IS NULL AND idUsuario IS NOT NULL)
@@ -102,14 +103,14 @@ CREATE TABLE IF NOT EXISTS viajeRuta (
     idViaje INT NOT NULL,
     idRuta INT NOT NULL,
     PRIMARY KEY (idViaje, idRuta), 
-    FOREIGN KEY (idViaje) REFERENCES viaje(idViaje),
-    FOREIGN KEY (idRuta) REFERENCES ruta(idRuta)
+    FOREIGN KEY (idViaje) REFERENCES viaje(idViaje) ON DELETE CASCADE,
+    FOREIGN KEY (idRuta) REFERENCES ruta(idRuta) ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS viajeBus (
     idViaje INT NOT NULL,
     idBus INT NOT NULL,
     PRIMARY KEY (idViaje, idBus),
-    FOREIGN KEY (idViaje) REFERENCES viaje(idViaje),
-    FOREIGN KEY (idBus) REFERENCES bus(idBus)
+    FOREIGN KEY (idViaje) REFERENCES viaje(idViaje) ON DELETE CASCADE,
+    FOREIGN KEY (idBus) REFERENCES bus(idBus) ON DELETE RESTRICT
 );

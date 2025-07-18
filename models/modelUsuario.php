@@ -3,26 +3,19 @@ require_once __DIR__ . '/model.php';
 
 class ModelUsuario extends Modelo {
     
-    /**
-     * Crear un nuevo usuario
-     */
     public function crearUsuario($username, $password, $email) {
-        // Log de entrada
         error_log("ModelUsuario::crearUsuario - Datos recibidos: username=$username, email=$email");
         
-        // Validar datos de entrada
         if (empty($username) || empty($password) || empty($email)) {
             error_log("ERROR: Todos los campos son obligatorios para crear un usuario");
             return false;
         }
         
-        // Validar formato del email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             error_log("ERROR: El formato del email no es válido");
             return false;
         }
         
-        // Validar longitud de campos según el modelo original
         if (strlen($username) > 50) {
             error_log("ERROR: El username no puede tener más de 50 caracteres");
             return false;
@@ -43,19 +36,16 @@ class ModelUsuario extends Modelo {
             return false;
         }
         
-        // Verificar que no exista email duplicado
         if ($this->existeEmail($email)) {
             error_log("ERROR: El email ya está registrado");
             return false;
         }
         
-        // Verificar que no exista username duplicado
         if ($this->existeUsername($username)) {
             error_log("ERROR: El username ya está registrado");
             return false;
         }
         
-        // Usar contraseña sin hash debido a limitación de varchar(10) en el modelo original
         $campos = ['username', 'password', 'email'];
         $valores = [$username, $password, $email];
         
@@ -72,23 +62,18 @@ class ModelUsuario extends Modelo {
         return $resultado;
     }
     
-    /**
-     * Autenticar usuario para login
-     */
     public function autenticarUsuario($username, $password) {
         if (empty($username) || empty($password)) {
             error_log("ERROR: Username y contraseña son requeridos para autenticar");
             return false;
         }
         
-        // Buscar usuario por username
         $consulta = "SELECT * FROM usuario WHERE username = ?";
         $resultado = $this->consultaPersonalizada($consulta, [$username]);
         
         if ($resultado && count($resultado) > 0) {
             $usuario = $resultado[0];
             
-            // Verificar contraseña directamente (sin hash debido a limitación del modelo)
             if ($usuario['password'] === $password) {
                 error_log("Autenticación exitosa para usuario: " . $usuario['username']);
                 return $usuario;
@@ -102,9 +87,6 @@ class ModelUsuario extends Modelo {
         }
     }
     
-    /**
-     * Obtener usuario por ID
-     */
     public function obtenerUsuarioPorId($idUsuario) {
         if (!is_numeric($idUsuario)) {
             return false;
@@ -113,9 +95,6 @@ class ModelUsuario extends Modelo {
         return $this->getbyId('usuario', $idUsuario, 'idUsuario');
     }
     
-    /**
-     * Obtener usuario por username
-     */
     public function obtenerUsuarioPorUsername($username) {
         if (empty($username)) {
             return false;
@@ -127,9 +106,6 @@ class ModelUsuario extends Modelo {
         return $resultado ? $resultado[0] : false;
     }
     
-    /**
-     * Obtener usuario por email
-     */
     public function obtenerUsuarioPorEmail($email) {
         if (empty($email)) {
             return false;
@@ -141,9 +117,7 @@ class ModelUsuario extends Modelo {
         return $resultado ? $resultado[0] : false;
     }
     
-    /**
-     * Actualizar usuario
-     */
+
     public function actualizarUsuario($idUsuario, $nombre = null, $apellido = null, $email = null, $password = null, $telefono = null) {
         if (!is_numeric($idUsuario)) {
             return false;
@@ -175,7 +149,7 @@ class ModelUsuario extends Modelo {
                 return false;
             }
             
-            // Verificar que el nuevo email no exista (excluyendo el usuario actual)
+            // Verificar que el nuevo email no exista 
             if ($this->existeEmail($email, $idUsuario)) {
                 error_log("ERROR: El email ya está en uso");
                 return false;
@@ -212,9 +186,6 @@ class ModelUsuario extends Modelo {
         return $resultado !== false;
     }
     
-    /**
-     * Eliminar usuario
-     */
     public function eliminarUsuario($idUsuario) {
         if (!is_numeric($idUsuario)) {
             return false;
@@ -234,9 +205,6 @@ class ModelUsuario extends Modelo {
         return $this->delete('usuario', "idUsuario = " . intval($idUsuario));
     }
     
-    /**
-     * Verificar si existe un username
-     */
     private function existeUsername($username, $excluirId = null) {
         $consulta = "SELECT COUNT(*) as total FROM usuario WHERE username = ?";
         $params = [$username];
@@ -250,9 +218,7 @@ class ModelUsuario extends Modelo {
         return $resultado && $resultado[0]['total'] > 0;
     }
     
-    /**
-     * Verificar si existe un email
-     */
+
     private function existeEmail($email, $excluirId = null) {
         $consulta = "SELECT COUNT(*) as total FROM usuario WHERE email = ?";
         $params = [$email];
@@ -266,16 +232,10 @@ class ModelUsuario extends Modelo {
         return $resultado && $resultado[0]['total'] > 0;
     }
     
-    /**
-     * Obtener todos los usuarios
-     */
     public function obtenerTodosLosUsuarios() {
         return $this->getAll('usuario');
     }
     
-    /**
-     * Obtener tickets del usuario
-     */
     public function obtenerTicketsUsuario($idUsuario) {
         if (!is_numeric($idUsuario)) {
             return [];
@@ -295,9 +255,6 @@ class ModelUsuario extends Modelo {
         return $this->consultaPersonalizada($consulta, [$idUsuario]);
     }
     
-    /**
-     * Comprar ticket
-     */
     public function comprarTicket($idUsuario, $idPasajero, $idViaje, $idAsiento) {
         if (!is_numeric($idUsuario) || !is_numeric($idPasajero) || !is_numeric($idViaje) || !is_numeric($idAsiento)) {
             error_log("ERROR: Los IDs deben ser numéricos");
@@ -327,10 +284,7 @@ class ModelUsuario extends Modelo {
         
         return $this->insert('ticket', $campos, $valores);
     }
-    
-    /**
-     * Obtener estadísticas del usuario
-     */
+
     public function obtenerEstadisticasUsuario($idUsuario) {
         if (!is_numeric($idUsuario)) {
             return false;

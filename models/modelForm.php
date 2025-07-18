@@ -11,9 +11,6 @@ class ModelForm{
         $this->initializeTableSchemas();
     }
     
-    /**
-     * Inicializa los esquemas de las tablas con sus tipos de datos y validaciones
-     */
     private function initializeTableSchemas(){
         $this->tableSchemas = [
             'usuario' => [
@@ -49,7 +46,8 @@ class ModelForm{
                 'idViaje' => ['type' => 'int', 'auto_increment' => true, 'primary_key' => true],
                 'fecha' => ['type' => 'date', 'required' => true],
                 'hInicio' => ['type' => 'time', 'required' => true],
-                'hFinal' => ['type' => 'time', 'required' => true]
+                'hFinal' => ['type' => 'time', 'required' => true],
+                'precio' => ['type' => 'int', 'required' => true]
             ],
             'asiento' => [
                 'idAsiento' => ['type' => 'int', 'auto_increment' => true, 'primary_key' => true],
@@ -268,9 +266,6 @@ class ModelForm{
         }
     }
     
-    /**
-     * Actualiza un registro en la tabla especificada
-     */
     public function update($tableName, $data, $id) {
         try {
             // Validar datos
@@ -314,9 +309,7 @@ class ModelForm{
         }
     }
     
-    /**
-     * Elimina un registro de la tabla especificada
-     */
+ 
     public function delete($tableName, $id) {
         try {
             $primaryKey = $this->getPrimaryKey($tableName);
@@ -402,9 +395,6 @@ class ModelForm{
         return true;
     }
     
-    /**
-     * Obtiene el esquema de una tabla
-     */
     public function getTableSchema($tableName) {
         if (isset($this->tableSchemas[$tableName])) {
             return $this->tableSchemas[$tableName];
@@ -424,16 +414,11 @@ class ModelForm{
         }
     }
     
-    /**
-     * Obtiene todas las tablas disponibles
-     */
+
     public function getAvailableTables() {
         return array_keys($this->tableSchemas);
     }
     
-    /**
-     * Obtiene un registro por ID
-     */
     public function getById($tableName, $id) {
         try {
             $primaryKey = $this->getPrimaryKey($tableName);
