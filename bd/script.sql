@@ -92,11 +92,7 @@ CREATE TABLE IF NOT EXISTS ticket (
     FOREIGN KEY (idViaje) REFERENCES viaje(idViaje) ON DELETE CASCADE,
     FOREIGN KEY (idAsiento) REFERENCES asiento(idAsiento) ON DELETE CASCADE,
     FOREIGN KEY (idBoletero) REFERENCES boletero(idTrabajador) ON DELETE SET NULL,
-    FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario) ON DELETE SET NULL,
-    CONSTRAINT chk_comprador CHECK ( 
-        (idBoletero IS NOT NULL AND idUsuario IS NULL) OR
-        (idBoletero IS NULL AND idUsuario IS NOT NULL)
-    )
+    FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS viajeRuta (

@@ -507,6 +507,9 @@
         }
         
         async function procesarCompraReal() {
+            // Mostrar indicador de carga
+            mostrarMensaje('Procesando compra...', 'success');
+            
             try {
                 const formData = new FormData();
                 formData.append('idViaje', viajeSeleccionado.id);
@@ -537,6 +540,10 @@
                     body: formData
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
                 const result = await response.json();
                 
                 if (result.success) {
@@ -546,8 +553,8 @@
                 }
                 
             } catch (error) {
-                console.error('Error:', error);
-                mostrarMensaje('Error de conexión al procesar la compra', 'error');
+                console.error('Error en procesarCompraReal:', error);
+                mostrarMensaje('Error de conexión: ' + error.message, 'error');
             }
         }
         

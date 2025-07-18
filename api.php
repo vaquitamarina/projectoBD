@@ -192,6 +192,7 @@ try {
             $idUsuario = $_SESSION['usuario_id'] ?? null;
             
             if (!$idUsuario) {
+                $response['success'] = false;
                 $response['message'] = 'Debe iniciar sesión para realizar la compra';
                 break;
             }
@@ -200,8 +201,23 @@ try {
             $pasajeros = $_POST['pasajeros'] ?? [];
             $asientos = $_POST['asientos'] ?? [];
             
+            // Si los datos vienen como strings JSON, decodificarlos
+            if (is_string($pasajeros)) {
+                $pasajeros = json_decode($pasajeros, true);
+            }
+            if (is_string($asientos)) {
+                $asientos = json_decode($asientos, true);
+            }
+            
             if (empty($idViaje) || empty($pasajeros) || empty($asientos)) {
+                $response['success'] = false;
                 $response['message'] = 'Datos incompletos para la compra';
+                break;
+            }
+            
+            if (count($pasajeros) !== count($asientos)) {
+                $response['success'] = false;
+                $response['message'] = 'El número de pasajeros debe coincidir con el número de asientos';
                 break;
             }
             
@@ -273,8 +289,10 @@ try {
                 $response['codigoReserva'] = 'TR' . time();
                 
             } catch (Exception $e) {
-                $pdo->rollBack();
-                error_log('Error en compra: ' . $e->getMessage());
+                if (isset($pdo)) {
+                    $pdo->rollBack();
+                }
+                $response['success'] = false;
                 $response['message'] = 'Error al procesar la compra: ' . $e->getMessage();
             }
             break;
@@ -289,5 +307,7 @@ try {
     $response['message'] = 'Error interno del servidor';
 }
 
+// Asegurar que se envíe JSON válido
+header('Content-Type: application/json');
 echo json_encode($response);
 ?>
