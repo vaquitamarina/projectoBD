@@ -26,9 +26,9 @@ class formController {
         $html .= "<h2>$formTitle</h2>";
         
         foreach ($schema as $field => $rules) {
-            // Saltar campos auto_increment en modo edición también
+
             if (isset($rules['auto_increment']) && $rules['auto_increment']) {
-                // En modo edición, agregar el ID como campo oculto
+
                 if ($isEditMode && isset($editData[$field])) {
                     $html .= "<input type='hidden' name='$field' value='" . htmlspecialchars($editData[$field]) . "'>";
                 }

@@ -2,10 +2,7 @@
 require_once __DIR__ . '/model.php';
 
 class ModelPasajero extends Modelo {
-    
-    /**
-     * Crear un nuevo pasajero
-     */
+
     public function crear($datos) {
         // Validar datos de entrada
         $errores = $this->validarDatos($datos);
@@ -40,16 +37,10 @@ class ModelPasajero extends Modelo {
         return $this->insert('pasajero', $campos, $valores);
     }
     
-    /**
-     * Obtener todos los pasajeros
-     */
     public function obtenerTodos() {
         return $this->getAll('pasajero');
     }
     
-    /**
-     * Obtener pasajero por ID
-     */
     public function obtenerPorId($idPasajero) {
         if (!is_numeric($idPasajero)) {
             return false;
@@ -58,9 +49,6 @@ class ModelPasajero extends Modelo {
         return $this->getbyId('pasajero', $idPasajero, 'idPasajero');
     }
     
-    /**
-     * Obtener pasajero por email
-     */
     public function obtenerPorEmail($email) {
         if (empty($email)) {
             return false;
@@ -71,10 +59,7 @@ class ModelPasajero extends Modelo {
         
         return $resultado ? $resultado[0] : false;
     }
-    
-    /**
-     * Obtener pasajero por DNI
-     */
+
     public function obtenerPorDni($dni) {
         if (empty($dni)) {
             return false;
@@ -86,9 +71,7 @@ class ModelPasajero extends Modelo {
         return $resultado ? $resultado[0] : false;
     }
     
-    /**
-     * Buscar pasajeros por nombre, apellido o DNI
-     */
+
     public function buscar($termino) {
         if (empty($termino)) {
             return [];
@@ -105,9 +88,7 @@ class ModelPasajero extends Modelo {
         return $this->consultaPersonalizada($consulta, [$parametro, $parametro, $parametro, $parametro]);
     }
     
-    /**
-     * Actualizar datos del pasajero
-     */
+  
     public function actualizar($idPasajero, $datos) {
         if (!is_numeric($idPasajero)) {
             return false;
@@ -163,10 +144,7 @@ class ModelPasajero extends Modelo {
         $resultado = $this->consultaPersonalizada($consulta, $valores);
         return $resultado !== false;
     }
-    
-    /**
-     * Eliminar pasajero
-     */
+   
     public function eliminar($idPasajero) {
         if (!is_numeric($idPasajero)) {
             return false;
@@ -186,9 +164,6 @@ class ModelPasajero extends Modelo {
         return $this->delete('pasajero', "idPasajero = " . intval($idPasajero));
     }
     
-    /**
-     * Obtener tickets del pasajero
-     */
     public function obtenerTickets($idPasajero) {
         if (!is_numeric($idPasajero)) {
             return [];
@@ -214,9 +189,6 @@ class ModelPasajero extends Modelo {
         return $this->consultaPersonalizada($consulta, [$idPasajero]);
     }
     
-    /**
-     * Obtener estadísticas del pasajero
-     */
     public function obtenerEstadisticas($idPasajero) {
         if (!is_numeric($idPasajero)) {
             return false;
@@ -240,9 +212,6 @@ class ModelPasajero extends Modelo {
         return $resultado ? $resultado[0] : false;
     }
     
-    /**
-     * Validar datos del pasajero
-     */
     private function validarDatos($datos, $excluirId = null) {
         $errores = [];
         
@@ -298,9 +267,6 @@ class ModelPasajero extends Modelo {
         return $errores;
     }
     
-    /**
-     * Verificar si existe un email
-     */
     private function existeEmail($email, $excluirId = null) {
         $consulta = "SELECT COUNT(*) as total FROM pasajero WHERE email = ?";
         $params = [$email];
@@ -314,9 +280,6 @@ class ModelPasajero extends Modelo {
         return $resultado && $resultado[0]['total'] > 0;
     }
     
-    /**
-     * Verificar si existe un DNI
-     */
     private function existeDni($dni, $excluirId = null) {
         $consulta = "SELECT COUNT(*) as total FROM pasajero WHERE dni = ?";
         $params = [$dni];
