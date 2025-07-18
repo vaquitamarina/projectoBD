@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS viaje (
     hFinal TIME NOT NULL
 );
 
--- MODIFICACIÓN PRINCIPAL: Asientos se eliminan cuando se elimina el bus
 CREATE TABLE IF NOT EXISTS asiento (
     idAsiento INT AUTO_INCREMENT PRIMARY KEY,
     numeroAsiento INT NOT NULL,
