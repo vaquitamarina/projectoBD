@@ -79,8 +79,41 @@ body {
     background: #28a745; 
 }
 
+.button-return {
+    background-color: #ffffff;
+    color: #1c1b20;
+    padding: 6px 10px;
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.button-return:hover {
+    background-color: #1c1b20;
+    color:#f0f0f0;
+    border: 2px solid #ffffff;
+    transform: scale(1.03);
+}
+
 .hidden { 
     display: none; 
+}
+
+/* Sección de resultados con scroll */
+#resultadosSection {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#listaViajes {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 10px;
 }
 
 .asientos-grid { 
@@ -147,6 +180,11 @@ body {
     margin: 20px 0;
 }
 
+::-webkit-scrollbar {
+width: 10px;
+height: 10px; 
+}
+
 table {
     width: 100%;
     border-collapse: separate;
@@ -209,4 +247,113 @@ tbody tr:last-child td {
 /* Estilos para formularios y botones */
 form {
     margin: 10px 0;
+}
+
+/* Estilos para las tarjetas de viajes */
+.viaje-card {
+    border: 2px solid #ddd;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.viaje-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.viaje-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.viaje-ruta {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.viaje-precio {
+    font-size: 20px;
+    font-weight: 700;
+    color: #007bff;
+}
+
+.viaje-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.viaje-info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.viaje-info-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.viaje-info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.viaje-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.viaje-disponibles {
+    font-size: 14px;
+    color: #28a745;
+    font-weight: 500;
+}
+
+.viaje-seleccionar {
+    background: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.viaje-seleccionar:hover {
+    background: #0056b3;
+}
+
+/* Responsive para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .viaje-info {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .viaje-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .viaje-precio {
+        margin-top: 5px;
+    }
 }

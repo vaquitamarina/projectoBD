@@ -57,7 +57,7 @@
             }
             ?>
         </main>
-         <footer>
+        <footer>
             <a class="button-return" href="../index.php">Volver</a>
         </footer>
     </div>

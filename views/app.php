@@ -128,7 +128,7 @@
         <!-- Área de mensajes -->
         <div id="mensajes"></div>
         <footer>
-            <a href="../index.php">Volver</a>
+            <a class="button-return" href="../index.php">Volver</a>
         </footer>
     </div>
 
@@ -301,21 +301,50 @@
             
             viajes.forEach(viaje => {
                 const viajeDiv = document.createElement('div');
-                viajeDiv.style.border = '1px solid #ddd';
-                viajeDiv.style.padding = '15px';
-                viajeDiv.style.margin = '10px 0';
-                viajeDiv.style.borderRadius = '4px';
+                viajeDiv.className = 'viaje-card';
                 
                 viajeDiv.innerHTML = `
-                    <h3>${viaje.ciudadOrigen} → ${viaje.ciudadFinal}</h3>
-                    <p><strong>Fecha:</strong> ${viaje.fecha}</p>
-                    <p><strong>Hora de salida:</strong> ${viaje.hInicio}</p>
-                    <p><strong>Hora de llegada:</strong> ${viaje.hFinal}</p>
-                    <p><strong>Bus:</strong> ${viaje.placa} (${viaje.clase})</p>
-                    <p><strong>Precio:</strong> S/ ${viaje.precio}</p>
-                    <p><strong>Asientos disponibles:</strong> ${viaje.asientos_disponibles}</p>
-                    <p><strong>Tiempo de viaje:</strong> ${viaje.tiempoViaje}</p>
-                    <button class="btn" onclick="seleccionarViaje(${viaje.idViaje}, '${viaje.ciudadOrigen}', '${viaje.ciudadFinal}', '${viaje.fecha}', '${viaje.hInicio}', '${viaje.hFinal}', ${viaje.precio}, '${viaje.placa}', '${viaje.clase}')">Seleccionar</button>
+                    <div class="viaje-header">
+                        <div class="viaje-ruta">${viaje.ciudadOrigen} → ${viaje.ciudadFinal}</div>
+                        <div class="viaje-precio">S/ ${viaje.precio}</div>
+                    </div>
+                    
+                    <div class="viaje-info">
+                        <div class="viaje-info-item">
+                            <div class="viaje-info-label">Fecha</div>
+                            <div class="viaje-info-value">${viaje.fecha}</div>
+                        </div>
+                        <div class="viaje-info-item">
+                            <div class="viaje-info-label">Salida</div>
+                            <div class="viaje-info-value">${viaje.hInicio}</div>
+                        </div>
+                        <div class="viaje-info-item">
+                            <div class="viaje-info-label">Llegada</div>
+                            <div class="viaje-info-value">${viaje.hFinal}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="viaje-info">
+                        <div class="viaje-info-item">
+                            <div class="viaje-info-label">Bus</div>
+                            <div class="viaje-info-value">${viaje.placa}</div>
+                        </div>
+                        <div class="viaje-info-item">
+                            <div class="viaje-info-label">Clase</div>
+                            <div class="viaje-info-value">${viaje.clase}</div>
+                        </div>
+                        <div class="viaje-info-item">
+                            <div class="viaje-info-label">Tiempo</div>
+                            <div class="viaje-info-value">${viaje.tiempoViaje}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="viaje-footer">
+                        <div class="viaje-disponibles">✓ ${viaje.asientos_disponibles} asientos disponibles</div>
+                        <button class="viaje-seleccionar" onclick="seleccionarViaje(${viaje.idViaje}, '${viaje.ciudadOrigen}', '${viaje.ciudadFinal}', '${viaje.fecha}', '${viaje.hInicio}', '${viaje.hFinal}', ${viaje.precio}, '${viaje.placa}', '${viaje.clase}')">
+                            Seleccionar Viaje
+                        </button>
+                    </div>
                 `;
                 
                 listaDiv.appendChild(viajeDiv);
