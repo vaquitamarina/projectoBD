@@ -1,5 +1,6 @@
 -- Active: 1752802333437@@127.0.0.1@3306@sistematransporte
 
+USE SistemaTransporte;
 -- 📌 USUARIO
 INSERT INTO usuario (username, password, email) VALUES
 ('admin', 'admin123', 'admin@transportes.com'),
@@ -84,7 +85,14 @@ INSERT INTO viaje (fecha, hInicio, hFinal, precio) VALUES
 ('2025-07-19', '07:00:00', '11:45:00', 95),  -- idViaje = 5 (Arequipa-Cusco)
 ('2025-07-20', '16:00:00', '22:30:00', 180), -- idViaje = 6 (Lima-Cusco)
 ('2025-07-21', '05:30:00', '09:00:00', 65),  -- idViaje = 7 (Ica-Lima)
-('2025-07-22', '13:00:00', '18:30:00', 110); -- idViaje = 8 (Cusco-Arequipa)
+('2025-07-22', '13:00:00', '18:30:00', 110), -- idViaje = 8 (Cusco-Arequipa)
+('2025-07-19', '06:00:00', '12:00:00', 45),  -- idViaje = 9 (Tacna-Arequipa)
+('2025-07-19', '08:30:00', '14:30:00', 45),  -- idViaje = 10 (Tacna-Arequipa)
+('2025-07-19', '11:00:00', '17:00:00', 45),  -- idViaje = 11 (Tacna-Arequipa)
+('2025-07-19', '14:00:00', '20:00:00', 45),  -- idViaje = 12 (Tacna-Arequipa)
+('2025-07-19', '16:30:00', '22:30:00', 45),  -- idViaje = 13 (Tacna-Arequipa)
+('2025-07-19', '20:00:00', '02:00:00', 50),  -- idViaje = 14 (Tacna-Arequipa)
+('2025-07-19', '22:30:00', '04:30:00', 50);  -- idViaje = 15 (Tacna-Arequipa)
 
 -- 📌 RUTA
 INSERT INTO ruta (ciudadOrigen, ciudadFinal) VALUES
@@ -108,7 +116,14 @@ INSERT INTO viajeRuta (idViaje, idRuta) VALUES
 (5, 5),  -- viaje 5: Arequipa - Cusco
 (6, 6),  -- viaje 6: Lima - Cusco
 (7, 7),  -- viaje 7: Ica - Lima
-(8, 8);  -- viaje 8: Cusco - Arequipa
+(8, 8),  -- viaje 8: Cusco - Arequipa
+(9, 1),  -- viaje 9: Tacna - Arequipa
+(10,1),  -- viaje 10: Tacna - Arequipa
+(11,1),  -- viaje 11: Tacna - Arequipa
+(12,1),  -- viaje 12: Tacna - Arequipa
+(13,1),  -- viaje 13: Tacna - Arequipa
+(14,1),  -- viaje 14: Tacna - Arequipa
+(15,1);  -- viaje 15: Tacna - Arequipa
 
 --  VIAJE BUS
 INSERT INTO viajeBus (idViaje, idBus) VALUES
@@ -119,7 +134,14 @@ INSERT INTO viajeBus (idViaje, idBus) VALUES
 (5, 5), -- viaje 5 con bus 5
 (6, 6), -- viaje 6 con bus 6
 (7, 7), -- viaje 7 con bus 7
-(8, 1); -- viaje 8 con bus 1
+(8, 1), -- viaje 8 con bus 1
+(9, 1), -- viaje 9 con bus 1
+(10,3), -- viaje 10 con bus 3
+(11,4), -- viaje 11 con bus 4
+(12,7), -- viaje 12 con bus 7
+(13,5), -- viaje 13 con bus 5
+(14,3), -- viaje 14 con bus 3
+(15,4); -- viaje 15 con bus 4
 
 --  ASIENTOS por bus (5 asientos por bus para mejor ejemplo)
 -- Bus 1 (ABC123) - VIP

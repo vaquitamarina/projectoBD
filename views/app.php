@@ -31,8 +31,10 @@
                         <label for="loginPassword">Contraseña:</label>
                         <input type="password" id="loginPassword" name="password" required>
                     </div>
-                    <button type="submit" class="btn">Iniciar Sesión</button>
-                    <button type="button" class="btn btn-secondary" onclick="mostrarRegistro()">Registrarse</button>
+                    <div class="btn-container">
+                        <button type="submit" class="btn">Iniciar Sesión</button>
+                        <button type="button" class="btn btn-secondary" onclick="mostrarRegistro()">Registrarse</button>
+                    </div>
                 </form>
             </div>
             
@@ -56,8 +58,10 @@
                         <label for="regConfirmarPassword">Confirmar Contraseña:</label>
                         <input type="password" id="regConfirmarPassword" name="confirmar_password" maxlength="10" required>
                     </div>
-                    <button type="submit" class="btn">Registrarse</button>
-                    <button type="button" class="btn btn-secondary" onclick="mostrarLogin()">Volver al Login</button>
+                    <div class="btn-container">
+                        <button type="submit" class="btn">Registrarse</button>
+                        <button type="button" class="btn btn-secondary" onclick="mostrarLogin()">Volver al Login</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -84,7 +88,9 @@
                     <label for="fechaViaje">Fecha de Viaje:</label>
                     <input type="date" id="fechaViaje" name="fechaViaje" required>
                 </div>
-                <button type="submit" class="btn">Buscar Viajes</button>
+                <div class="btn-container">
+                    <button type="submit" class="btn">Buscar Viajes</button>
+                </div>
             </form>
         </div>
         
@@ -105,7 +111,9 @@
             <div class="asientos-grid" id="asientosGrid">
                 <!-- Los asientos se cargarán aquí dinámicamente -->
             </div>
-            <button type="button" class="btn" onclick="continuarCompra()">Continuar con la Compra</button>
+            <div class="btn-container">
+                <button type="button" class="btn" onclick="continuarCompra()">Continuar con la Compra</button>
+            </div>
         </div>
         
         <!-- Sección de Datos de Pasajeros -->
@@ -114,7 +122,9 @@
             <div id="formasPasajeros">
                 <!-- Los formularios de pasajeros se generarán aquí dinámicamente -->
             </div>
-            <button type="button" class="btn btn-success" onclick="confirmarCompra()">Confirmar Compra</button>
+            <div class="btn-container">
+                <button type="button" class="btn btn-success" onclick="confirmarCompra()">Confirmar Compra</button>
+            </div>
         </div>
         
         <!-- Sección de Confirmación -->
@@ -192,6 +202,11 @@
                 document.getElementById(id).classList.add('hidden');
             });
             document.getElementById(seccionId).classList.remove('hidden');
+            
+            // Remover clase expanded si no estamos en la sección de pasajeros
+            if (seccionId !== 'pasajerosSection') {
+                document.querySelector('.container').classList.remove('expanded');
+            }
         }
         
         function mostrarMensaje(mensaje, tipo = 'success') {
@@ -455,6 +470,9 @@
             const container = document.getElementById('formasPasajeros');
             container.innerHTML = '';
             
+            // Agregar clase expanded al contenedor principal
+            document.querySelector('.container').classList.add('expanded');
+            
             asientosSeleccionados.forEach((asiento, index) => {
                 const form = document.createElement('div');
                 form.className = 'pasajero-form';
@@ -591,7 +609,9 @@
                 <h4>Tickets generados:</h4>
                 ${ticketsHtml}
                 <p><em>Los pasajeros y tickets han sido guardados en la base de datos</em></p>
-                <button class="btn" onclick="location.reload()">Nueva Compra</button>
+                <div class="btn-container">
+                    <button class="btn" onclick="location.reload()">Nueva Compra</button>
+                </div>
             `;
             
             mostrarSeccion('confirmacionSection');
