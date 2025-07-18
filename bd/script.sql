@@ -96,8 +96,8 @@ CREATE TABLE IF NOT EXISTS ticket (
 );
 
 CREATE TABLE IF NOT EXISTS viajeRuta (
-    idViaje INT NOT NULL,
     idRuta INT NOT NULL,
+    idViaje INT NOT NULL,
     PRIMARY KEY (idViaje, idRuta), 
     FOREIGN KEY (idViaje) REFERENCES viaje(idViaje) ON DELETE CASCADE,
     FOREIGN KEY (idRuta) REFERENCES ruta(idRuta) ON DELETE RESTRICT

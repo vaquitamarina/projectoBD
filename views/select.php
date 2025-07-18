@@ -1,25 +1,26 @@
 <p>Seleccione una tabla para ver los registros:</p>
 <form method="post" action="crud.php">
-    <select name="selectedTable">
-        <option value="">-- Selecciona una tabla --</option>
-        <?php
-        if (isset($data) && is_array($data)) {
-            $tabla_actual = isset($_POST['selectedTable']) ? $_POST['tabla_seleccionada'] : '';
-            foreach ($data as $tabla) {
-                $selected = ($tabla === $tabla_actual) ? 'selected' : '';
-                echo "<option value='{$tabla}' {$selected}>{$tabla}</option>";
+    <div class="custom-select">
+        <select name="selectedTable">
+            <option value="">-- Selecciona una tabla --</option>
+            <?php
+            if (isset($data) && is_array($data)) {
+                $tabla_actual = isset($_POST['selectedTable']) ? $_POST['tabla_seleccionada'] : '';
+                foreach ($data as $tabla) {
+                    $selected = ($tabla === $tabla_actual) ? 'selected' : '';
+                    echo "<option value='{$tabla}' {$selected}>{$tabla}</option>";
+                }
+            } else {
+                echo "<option value=''>No hay tablas disponibles</option>";
             }
-        } else {
-            echo "<option value=''>No hay tablas disponibles</option>";
-        }
-        ?>
-    </select>
+            ?>
+        </select>
+    </div>
     <button type="submit" name="accion" value="getRegister">Seleccionar</button>
 </form>
 
 <?php
 if (isset($registros) && is_array($registros) && !empty($registros)): ?>
-    <h2>Registros de la tabla: <?= htmlspecialchars($_POST['selectedTable'] ?? '') ?></h2>
     <div class="table-container">
     <table>
         <thead>
