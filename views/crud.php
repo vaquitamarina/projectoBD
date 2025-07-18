@@ -39,7 +39,8 @@
                             $controller->updateRow($data);
                             break;
                         case 'addRow':
-
+                            $data = $_POST;
+                            $controller->addRow($data);
                             break;
                         case 'app':
 

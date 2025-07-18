@@ -36,8 +36,44 @@ class ModelController{
     }
     public function addRow($data){
         $tableName = $data['table'];
-        unset($data['editMode']);
+        $values = $data;
+        unset($values['table']);
+        unset($values['accion']);
+
+        $result = $this->modelForm->insert($tableName, $values);
+    
+        if ($result && isset($result['success']) && $result['success']) {
+            // Redirigir a crud.php con POST para mostrar la tabla actualizada
+            echo "<script>
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'crud.php';
+                
+                const tableField = document.createElement('input');
+                tableField.type = 'hidden';
+                tableField.name = 'selectedTable';
+                tableField.value = '" . htmlspecialchars($tableName) . "';
+                form.appendChild(tableField);
+                
+                const actionField = document.createElement('input');
+                actionField.type = 'hidden';
+                actionField.name = 'accion';
+                actionField.value = 'getRegister';
+                form.appendChild(actionField);
+                
+                document.body.appendChild(form);
+                form.submit();
+            </script>";
+            exit;
+        } else {
+            echo "Error en la actualización";
+            if (isset($result['errors'])) {
+                print_r($result['errors']);
+            }
+            $this->renderView("form", $tableName);
+        }  
     }
+
     public function updateRow($data){
         $tableName = $data['table'];
         $primaryKey = $this->modelForm->getPrimaryKey($tableName);
