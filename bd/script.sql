@@ -62,7 +62,8 @@ CREATE TABLE IF NOT EXISTS viaje (
     idViaje INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
     hInicio TIME NOT NULL,
-    hFinal TIME NOT NULL
+    hFinal TIME NOT NULL,
+    precio INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS asiento (

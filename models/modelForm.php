@@ -46,7 +46,8 @@ class ModelForm{
                 'idViaje' => ['type' => 'int', 'auto_increment' => true, 'primary_key' => true],
                 'fecha' => ['type' => 'date', 'required' => true],
                 'hInicio' => ['type' => 'time', 'required' => true],
-                'hFinal' => ['type' => 'time', 'required' => true]
+                'hFinal' => ['type' => 'time', 'required' => true],
+                'precio' => ['type' => 'int', 'required' => true]
             ],
             'asiento' => [
                 'idAsiento' => ['type' => 'int', 'auto_increment' => true, 'primary_key' => true],
