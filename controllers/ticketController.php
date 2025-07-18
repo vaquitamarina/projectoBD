@@ -338,7 +338,7 @@ class TicketController {
                 "SELECT a.idAsiento, a.numeroAsiento, a.piso, a.estado,
                 CASE WHEN t.idTicket IS NULL THEN 'Disponible' ELSE 'Ocupado' END AS disponibilidad
                 FROM asiento a
-                INNER JOIN viajeBus vb ON a.idBus = vb.idBus
+                INNER JOIN viajebus vb ON a.idBus = vb.idBus
                 LEFT JOIN ticket t ON a.idAsiento = t.idAsiento AND t.idViaje = ?
                 WHERE vb.idViaje = ? AND a.estado = 'D'
                 ORDER BY a.piso, a.numeroAsiento",
