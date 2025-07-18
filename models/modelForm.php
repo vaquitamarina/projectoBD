@@ -70,6 +70,24 @@ class ModelForm{
                 'idAsiento' => ['type' => 'int', 'required' => true, 'foreign_key' => 'asiento.idAsiento'],
                 'idBoletero' => ['type' => 'int', 'required' => false, 'foreign_key' => 'boletero.idTrabajador'],
                 'idUsuario' => ['type' => 'int', 'required' => false, 'foreign_key' => 'usuario.idUsuario']
+            ],
+            'boletero' => [
+                'idTrabajador' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'trabajador.idTrabajador']
+            ],
+            'viajeRuta' => [
+                'idViaje' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'viaje.idViaje'],
+                'idRuta' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'ruta.idRuta']
+            ],
+            'viajeBus' => [
+                'idViaje' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'viaje.idViaje'],
+                'idBus' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'bus.idBus']
+            ],
+            'trabajadorBus' => [
+                'idTrabajador' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'trabajador.idTrabajador'],
+                'idBus' => ['type' => 'int', 'required' => true, 'foreign_key' => 'bus.idBus']
+            ],
+            'chofer' => [
+                'idTrabajador' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'trabajador.idTrabajador']
             ]
         ];
     }

@@ -26,6 +26,7 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
                 <?php foreach (array_keys($registros[0]) as $columna): ?>
                     <th><?= ucfirst(htmlspecialchars($columna)) ?></th>
                 <?php endforeach; ?>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +37,16 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
                             <?= htmlspecialchars($valor ?? 'NULL') ?>
                         </td>
                     <?php endforeach; ?>
+                    <td>
+                        <form method="post" action="crud.php" style="display: inline;">
+                            <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>">
+                            <input type="hidden" name="editMode" value="true">
+                            <?php foreach ($fila as $campo => $valor): ?>
+                                <input type="hidden" name="editData[<?= htmlspecialchars($campo) ?>]" value="<?= htmlspecialchars($valor) ?>">
+                            <?php endforeach; ?>
+                            <button type="submit" name="accion" value="addRow">Actualizar</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

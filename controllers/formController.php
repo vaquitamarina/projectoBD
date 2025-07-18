@@ -8,20 +8,30 @@ class formController {
         $this->model = new ModelForm();
     }
     
-    public function generateForm($tableName) {
+    public function generateForm($tableName, $editData = null) {
         $schema = $this->model->getTableSchema($tableName);
         
         if (!$schema) {
             return "<p>Error: Tabla '$tableName' no encontrada</p>";
         }
         
+        $isEditMode = !empty($editData);
+        $formTitle = $isEditMode ? "Editar registro de $tableName" : "Formulario para $tableName";
+        
         $html = "<form method='POST' action='../controllers/processForm.php'>";
         $html .= "<input type='hidden' name='table' value='$tableName'>";
-        $html .= "<h2>Formulario para $tableName</h2>";
+        if ($isEditMode) {
+            $html .= "<input type='hidden' name='editMode' value='true'>";
+        }
+        $html .= "<h2>$formTitle</h2>";
         
         foreach ($schema as $field => $rules) {
-            // Saltar campos auto_increment
+            // Saltar campos auto_increment en modo edición también
             if (isset($rules['auto_increment']) && $rules['auto_increment']) {
+                // En modo edición, agregar el ID como campo oculto
+                if ($isEditMode && isset($editData[$field])) {
+                    $html .= "<input type='hidden' name='$field' value='" . htmlspecialchars($editData[$field]) . "'>";
+                }
                 continue;
             }
             
@@ -32,13 +42,16 @@ class formController {
             }
             $html .= ":</label>";
             
+            // Obtener valor actual si está en modo edición
+            $currentValue = $isEditMode && isset($editData[$field]) ? $editData[$field] : '';
+            
             // Verificar si es clave foránea
             if (isset($rules['foreign_key'])) {
-                $html .= $this->generateForeignKeySelect($field, $rules);
+                $html .= $this->generateForeignKeySelect($field, $rules, $currentValue);
             } else {
                 switch ($rules['type']) {
                     case 'email':
-                        $html .= "<input type='email' id='$field' name='$field'";
+                        $html .= "<input type='email' id='$field' name='$field' value='" . htmlspecialchars($currentValue) . "'";
                         if (isset($rules['required']) && $rules['required']) {
                             $html .= " required";
                         }
@@ -48,21 +61,21 @@ class formController {
                         $html .= ">";
                         break;
                     case 'date':
-                        $html .= "<input type='date' id='$field' name='$field'";
+                        $html .= "<input type='date' id='$field' name='$field' value='" . htmlspecialchars($currentValue) . "'";
                         if (isset($rules['required']) && $rules['required']) {
                             $html .= " required";
                         }
                         $html .= ">";
                         break;
                     case 'time':
-                        $html .= "<input type='time' id='$field' name='$field'";
+                        $html .= "<input type='time' id='$field' name='$field' value='" . htmlspecialchars($currentValue) . "'";
                         if (isset($rules['required']) && $rules['required']) {
                             $html .= " required";
                         }
                         $html .= ">";
                         break;
                     case 'int':
-                        $html .= "<input type='number' id='$field' name='$field'";
+                        $html .= "<input type='number' id='$field' name='$field' value='" . htmlspecialchars($currentValue) . "'";
                         if (isset($rules['min_value'])) {
                             $html .= " min='{$rules['min_value']}'";
                         }
@@ -84,12 +97,19 @@ class formController {
                             $html .= ">";
                             $html .= "<option value=''>Seleccionar...</option>";
                             foreach ($rules['allowed_values'] as $value) {
-                                $html .= "<option value='$value'>$value</option>";
+                                // Comparación más robusta que maneja strings y números
+                                $selected = (strval($currentValue) == strval($value)) ? " selected" : "";
+                                $html .= "<option value='$value'$selected>$value</option>";
                             }
                             $html .= "</select>";
+                            
+                            // Debug temporal (comentar en producción)
+                            if ($isEditMode && !empty($currentValue)) {
+                                $html .= "<!-- Debug: Campo '$field' - Valor actual: '$currentValue' - Valores permitidos: " . implode(', ', $rules['allowed_values']) . " -->";
+                            }
                         } else {
                             // Input text normal
-                            $html .= "<input type='text' id='$field' name='$field'";
+                            $html .= "<input type='text' id='$field' name='$field' value='" . htmlspecialchars($currentValue) . "'";
                             if (isset($rules['max_length'])) {
                                 $html .= " maxlength='{$rules['max_length']}'";
                             }
@@ -106,7 +126,8 @@ class formController {
             $html .= "</div>";
         }
         
-        $html .= "<button type='submit'>Guardar</button>";
+        $submitText = $isEditMode ? "Actualizar" : "Guardar";
+        $html .= "<button type='submit'>$submitText</button>";
         $html .= "</form>";
         
         return $html;
@@ -115,7 +136,7 @@ class formController {
     /**
      * Genera un select para claves foráneas con datos de la tabla referenciada
      */
-    private function generateForeignKeySelect($field, $rules) {
+    private function generateForeignKeySelect($field, $rules, $currentValue = '') {
         // Extraer el nombre de la tabla y campo de la foreign key
         list($referencedTable, $referencedField) = explode('.', $rules['foreign_key']);
         
@@ -132,8 +153,9 @@ class formController {
         if ($data) {
             foreach ($data as $row) {
                 $value = $row[$referencedField];
+                $selected = ($currentValue == $value) ? " selected" : "";
                 $displayText = $this->getDisplayText($referencedTable, $row);
-                $html .= "<option value='$value'>$displayText</option>";
+                $html .= "<option value='$value'$selected>$displayText</option>";
             }
         }
         
