@@ -45,8 +45,8 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
                             <?php foreach ($fila as $campo => $valor): ?>
                                 <input type="hidden" name="editData[<?= htmlspecialchars($campo) ?>]" value="<?= htmlspecialchars($valor) ?>">
                             <?php endforeach; ?>
-                            <button type="submit" name="accion" value="addForm">Actualizar</button>
-                            <button type="submit" name="accion" value="deleteRow">Eliminar</button>
+                            <button class="button-act" type="submit" name="accion" value="addForm">Actualizar</button>
+                            <button class="button-del" type="submit" name="accion" value="deleteRow">Eliminar</button>
                         </form>
                     </td>
                 </tr>

@@ -95,3 +95,32 @@ tbody tr:last-child td {
 form {
     margin: 10px 0;
 }
+
+.button-act {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px
+}
+
+.button-act:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+.button-del {
+    background-color: #f44336; /* Red */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px
+
+}
+
+.button-del:hover {
+    background-color: #e53935; /* Darker red */
+}
