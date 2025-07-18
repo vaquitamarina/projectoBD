@@ -74,15 +74,15 @@ class ModelForm{
             'boletero' => [
                 'idTrabajador' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'trabajador.idTrabajador']
             ],
-            'viajeRuta' => [
+            'viajeruta' => [
                 'idViaje' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'viaje.idViaje'],
                 'idRuta' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'ruta.idRuta']
             ],
-            'viajeBus' => [
+            'viajebus' => [
                 'idViaje' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'viaje.idViaje'],
                 'idBus' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'bus.idBus']
             ],
-            'trabajadorBus' => [
+            'trabajadorbus' => [
                 'idTrabajador' => ['type' => 'int', 'required' => true, 'primary_key' => true, 'foreign_key' => 'trabajador.idTrabajador'],
                 'idBus' => ['type' => 'int', 'required' => true, 'foreign_key' => 'bus.idBus']
             ],
@@ -385,11 +385,11 @@ class ModelForm{
         $references = [
             'usuario' => ['ticket'],
             'pasajero' => ['ticket'],
-            'bus' => ['asiento', 'trabajadorBus', 'viajeBus'],
-            'trabajador' => ['boletero', 'trabajadorBus'],
-            'viaje' => ['ticket', 'viajeRuta', 'viajeBus'],
+            'bus' => ['asiento', 'trabajadorbus', 'viajebus'],
+            'trabajador' => ['boletero', 'trabajadorbus'],
+            'viaje' => ['ticket', 'viajeruta', 'viajebus'],
             'asiento' => ['ticket'],
-            'ruta' => ['viajeRuta']
+            'ruta' => ['viajeruta']
         ];
         
         if (isset($references[$tableName])) {
@@ -399,9 +399,9 @@ class ModelForm{
                 // Casos especiales
                 if ($tableName === 'trabajador' && $referencingTable === 'boletero') {
                     $foreignKeyField = 'idTrabajador';
-                } elseif ($tableName === 'trabajador' && $referencingTable === 'trabajadorBus') {
+                } elseif ($tableName === 'trabajador' && $referencingTable === 'trabajadorbus') {
                     $foreignKeyField = 'idTrabajador';
-                } elseif ($tableName === 'bus' && $referencingTable === 'trabajadorBus') {
+                } elseif ($tableName === 'bus' && $referencingTable === 'trabajadorbus') {
                     $foreignKeyField = 'idBus';
                 }
                 

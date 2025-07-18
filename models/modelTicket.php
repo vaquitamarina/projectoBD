@@ -43,9 +43,9 @@ class TicketModel extends Modelo {
                     JOIN pasajero p ON t.idPasajero = p.idPasajero
                     JOIN viaje v ON t.idViaje = v.idViaje
                     JOIN asiento a ON t.idAsiento = a.idAsiento
-                    JOIN viajeBus vb ON v.idViaje = vb.idViaje
+                    JOIN viajebus vb ON v.idViaje = vb.idViaje
                     JOIN bus b ON vb.idBus = b.idBus
-                    JOIN viajeRuta vr ON v.idViaje = vr.idViaje
+                    JOIN viajeruta vr ON v.idViaje = vr.idViaje
                     JOIN ruta r ON vr.idRuta = r.idRuta
                     WHERE t.idTicket = ?";
         
