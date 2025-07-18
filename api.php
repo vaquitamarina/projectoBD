@@ -243,7 +243,7 @@ try {
                     } else {
                         // Crear nuevo pasajero
                         $insertPasajero = "INSERT INTO pasajero (nombres, apellidos, email, fechaDeNacimiento, sexo, dni) 
-                                          VALUES (?, ?, ?, ?, ?, ?)";
+                                        VALUES (?, ?, ?, ?, ?, ?)";
                         $stmtInsertPasajero = $pdo->prepare($insertPasajero);
                         $stmtInsertPasajero->execute([
                             $pasajero['nombres'],
