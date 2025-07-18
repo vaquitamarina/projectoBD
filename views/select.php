@@ -46,4 +46,8 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
     </form>
 <?php elseif (isset($_POST['selectedTable']) && !empty($_POST['selectedTable'])): ?>
     <p>No se encontraron registros en la tabla seleccionada.</p>
+    <form method="post" action="crud.php">
+        <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>"> 
+        <button type="submit" name="accion" value="addRow" >Añadir fila</button>
+    </form>
 <?php endif; ?>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,6 @@
 </head>
 
 <body>
-
     <div class="container">
         <h1>SISTEMA DE TRANSPORTE</h1>
         <div class="links-container">
@@ -20,4 +19,7 @@
             <a href="views/app.php">Ir a App</a>
         </div>
     </div>
+</body>
+
+</html>
 </body>
