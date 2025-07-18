@@ -140,6 +140,11 @@ button:hover {
     transform: scale(1.03);
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px; 
+}
+
 .button-act {
     background-color: #4CAF50;
     color: white;
