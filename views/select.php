@@ -16,7 +16,7 @@
             ?>
         </select>
     </div>
-    <button type="submit" name="accion" value="getRegister">Seleccionar</button>
+    <button class="button-s" type="submit" name="accion" value="getRegister">Seleccionar</button>
 </form>
 
 <?php
@@ -57,12 +57,12 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
     </div>
     <form method="post" action="crud.php">
         <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>"> 
-        <button type="submit" name="accion" value="addForm" >Añadir fila</button>
+        <button class="button-s" type="submit" name="accion" value="addForm" >Añadir fila</button>
     </form>
 <?php elseif (isset($_POST['selectedTable']) && !empty($_POST['selectedTable'])): ?>
     <p>No se encontraron registros en la tabla seleccionada.</p>
     <form method="post" action="crud.php">
         <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>"> 
-        <button type="submit" name="accion" value="addForm" >Añadir fila</button>
+        <button class="button-s" type="submit" name="accion" value="addForm" >Añadir fila</button>
     </form>
 <?php endif; ?>
