@@ -148,6 +148,9 @@
         
         <!-- Área de mensajes -->
         <div id="mensajes"></div>
+        <footer>
+            <a href="../index.php">Volver</a>
+        </footer>
     </div>
 
     <script>
