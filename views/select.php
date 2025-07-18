@@ -20,6 +20,7 @@
 <?php
 if (isset($registros) && is_array($registros) && !empty($registros)): ?>
     <h2>Registros de la tabla: <?= htmlspecialchars($_POST['selectedTable'] ?? '') ?></h2>
+    <div class="table-container">
     <table>
         <thead>
             <tr>
@@ -52,6 +53,7 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
     <form method="post" action="crud.php">
         <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>"> 
         <button type="submit" name="accion" value="addForm" >Añadir fila</button>
