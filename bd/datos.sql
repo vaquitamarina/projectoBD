@@ -99,7 +99,7 @@ INSERT INTO ruta (ciudadOrigen, ciudadFinal) VALUES
 ('Arequipa', 'Tacna'),        -- idRuta = 9
 ('Cusco', 'Lima');            -- idRuta = 10
 
--- 📌 VIAJE RUTA
+--  VIAJE RUTA
 INSERT INTO viajeRuta (idViaje, idRuta) VALUES
 (1, 1),  -- viaje 1: Tacna - Arequipa
 (2, 2),  -- viaje 2: Lima - Ica
@@ -110,7 +110,7 @@ INSERT INTO viajeRuta (idViaje, idRuta) VALUES
 (7, 7),  -- viaje 7: Ica - Lima
 (8, 8);  -- viaje 8: Cusco - Arequipa
 
--- 📌 VIAJE BUS
+--  VIAJE BUS
 INSERT INTO viajeBus (idViaje, idBus) VALUES
 (1, 1), -- viaje 1 con bus 1
 (2, 2), -- viaje 2 con bus 2
@@ -121,7 +121,7 @@ INSERT INTO viajeBus (idViaje, idBus) VALUES
 (7, 7), -- viaje 7 con bus 7
 (8, 1); -- viaje 8 con bus 1
 
--- 📌 ASIENTOS por bus (5 asientos por bus para mejor ejemplo)
+--  ASIENTOS por bus (5 asientos por bus para mejor ejemplo)
 -- Bus 1 (ABC123) - VIP
 INSERT INTO asiento (numeroAsiento, piso, estado, idBus) VALUES
 (1, 1, '0', 1), (2, 1, '0', 1), (3, 1, '0', 1), (4, 1, '0', 1), (5, 2, '0', 1);
