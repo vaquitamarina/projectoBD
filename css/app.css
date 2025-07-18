@@ -15,7 +15,7 @@ body {
 .container {
     width: 200%;
     height: 100vh;
-    background-color: #ffd670;
+    background-color: #f8e0a2;
     border-radius: 0px;
     padding: 10px;
     display: flex;
@@ -27,9 +27,18 @@ body {
 
 .form-section { 
     background: #f8f9fa; 
-    padding: 20px; 
-    margin: 20px 0; 
+    padding: 30px;
+    max-width: 500px;
+    width: 95%;
+    margin: 30px 0; 
     border-radius: 8px; 
+}
+
+.form-section h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 600;
 }
 
 .form-group { 
