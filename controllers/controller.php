@@ -119,6 +119,35 @@ class ModelController{
     }
 
     }
+
+    public function deleteRow($data){
+        $tableName = $data['insertTable'];
+        $primaryKey = $this->modelForm->getPrimaryKey($tableName);
+        $values = $data['editData'];
+        $id = $values[$primaryKey];
+        $this->modelForm->delete($tableName,$id);
+        echo "<script>
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'crud.php';
+            
+            const tableField = document.createElement('input');
+            tableField.type = 'hidden';
+            tableField.name = 'selectedTable';
+            tableField.value = '" . htmlspecialchars($tableName) . "';
+            form.appendChild(tableField);
+            
+            const actionField = document.createElement('input');
+            actionField.type = 'hidden';
+            actionField.name = 'accion';
+            actionField.value = 'getRegister';
+            form.appendChild(actionField);
+            
+            document.body.appendChild(form);
+            form.submit();
+        </script>";
+        exit;
+    }
 }
 
 ?>

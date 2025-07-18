@@ -45,6 +45,7 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
                                 <input type="hidden" name="editData[<?= htmlspecialchars($campo) ?>]" value="<?= htmlspecialchars($valor) ?>">
                             <?php endforeach; ?>
                             <button type="submit" name="accion" value="addForm">Actualizar</button>
+                            <button type="submit" name="accion" value="deleteRow">Eliminar</button>
                         </form>
                     </td>
                 </tr>

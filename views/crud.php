@@ -42,7 +42,10 @@
                             $data = $_POST;
                             $controller->addRow($data);
                             break;
-                        case 'app':
+                        case 'deleteRow':
+                            $data = $_POST;
+                            $controller->deleteRow($data);
+                            break;
 
                     }
                 }else{
