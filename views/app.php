@@ -6,31 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SISTEMA TRANSPORTE</title>
     <script src="https://kit.fontawesome.com/f9a3e96628.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../css/crud.css">
+    <link rel="stylesheet" href="../css/app.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <style>
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .form-section { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 8px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn:hover { background: #0056b3; }
-        .btn-secondary { background: #6c757d; }
-        .btn-success { background: #28a745; }
-        .hidden { display: none; }
-        .asientos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
-        .asiento { padding: 10px; border: 2px solid #ddd; text-align: center; cursor: pointer; border-radius: 4px; }
-        .asiento.disponible { background: #28a745; color: white; }
-        .asiento.ocupado { background: #dc3545; color: white; cursor: not-allowed; }
-        .asiento.seleccionado { background: #007bff; color: white; }
-        .pasajero-form { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px; }
-        .message { padding: 10px; margin: 10px 0; border-radius: 4px; }
-        .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .message.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    </style>
 </head>
 
 <body>
