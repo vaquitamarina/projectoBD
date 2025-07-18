@@ -101,5 +101,9 @@ class Modelo{
             return false;
         }
     }
+    
+    public function getConnection(){
+        return $this->db;
+    }
 }
 ?>

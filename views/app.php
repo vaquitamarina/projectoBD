@@ -91,22 +91,14 @@
                     <label for="ciudadOrigen">Ciudad de Origen:</label>
                     <select id="ciudadOrigen" name="ciudadOrigen" required>
                         <option value="">Seleccione ciudad</option>
-                        <option value="Lima">Lima</option>
-                        <option value="Arequipa">Arequipa</option>
-                        <option value="Cusco">Cusco</option>
-                        <option value="Trujillo">Trujillo</option>
-                        <option value="Chiclayo">Chiclayo</option>
+                        <!-- Las ciudades se cargarán dinámicamente -->
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="ciudadDestino">Ciudad de Destino:</label>
                     <select id="ciudadDestino" name="ciudadDestino" required>
                         <option value="">Seleccione ciudad</option>
-                        <option value="Lima">Lima</option>
-                        <option value="Arequipa">Arequipa</option>
-                        <option value="Cusco">Cusco</option>
-                        <option value="Trujillo">Trujillo</option>
-                        <option value="Chiclayo">Chiclayo</option>
+                        <!-- Las ciudades se cargarán dinámicamente -->
                     </select>
                 </div>
                 <div class="form-group">
@@ -162,6 +154,44 @@
         let viajeSeleccionado = null;
         let asientosSeleccionados = [];
         let usuarioActual = null;
+        
+        // Cargar ciudades al inicio
+        async function cargarCiudades() {
+            try {
+                const response = await fetch('../api.php?action=obtener_ciudades');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const ciudades = result.ciudades;
+                    const origenSelect = document.getElementById('ciudadOrigen');
+                    const destinoSelect = document.getElementById('ciudadDestino');
+                    
+                    // Limpiar opciones existentes excepto la primera
+                    origenSelect.innerHTML = '<option value="">Seleccione ciudad</option>';
+                    destinoSelect.innerHTML = '<option value="">Seleccione ciudad</option>';
+                    
+                    // Agregar las ciudades de la base de datos
+                    ciudades.forEach(ciudad => {
+                        const option1 = document.createElement('option');
+                        option1.value = ciudad.ciudad;
+                        option1.textContent = ciudad.ciudad;
+                        origenSelect.appendChild(option1);
+                        
+                        const option2 = document.createElement('option');
+                        option2.value = ciudad.ciudad;
+                        option2.textContent = ciudad.ciudad;
+                        destinoSelect.appendChild(option2);
+                    });
+                }
+            } catch (error) {
+                console.error('Error cargando ciudades:', error);
+            }
+        }
+        
+        // Cargar ciudades cuando se muestra la sección de búsqueda
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarCiudades();
+        });
         
         // Funciones de autenticación
         function mostrarRegistro() {
@@ -243,21 +273,44 @@
             }
         });
         
-        document.getElementById('busquedaForm').addEventListener('submit', function(e) {
+        document.getElementById('busquedaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const origen = document.getElementById('ciudadOrigen').value;
             const destino = document.getElementById('ciudadDestino').value;
             const fecha = document.getElementById('fechaViaje').value;
             
-            // Simular búsqueda de viajes
-            const viajes = [
-                { id: 1, origen: origen, destino: destino, fecha: fecha, hora: '08:00', precio: 50, bus: 'Bus Premium' },
-                { id: 2, origen: origen, destino: destino, fecha: fecha, hora: '14:00', precio: 45, bus: 'Bus Económico' },
-                { id: 3, origen: origen, destino: destino, fecha: fecha, hora: '20:00', precio: 55, bus: 'Bus VIP' }
-            ];
+            if (origen === destino) {
+                mostrarMensaje('La ciudad de origen y destino no pueden ser iguales', 'error');
+                return;
+            }
             
-            mostrarViajes(viajes);
-            mostrarSeccion('resultadosSection');
+            try {
+                const formData = new FormData();
+                formData.append('ciudadOrigen', origen);
+                formData.append('ciudadDestino', destino);
+                formData.append('fechaViaje', fecha);
+                
+                const response = await fetch('../api.php?action=buscar_viajes', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.viajes.length > 0) {
+                        mostrarViajes(result.viajes);
+                        mostrarSeccion('resultadosSection');
+                    } else {
+                        mostrarMensaje('No hay viajes disponibles para la fecha y ruta seleccionadas', 'error');
+                    }
+                } else {
+                    mostrarMensaje(result.message || 'Error al buscar viajes', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarMensaje('Error de conexión al buscar viajes', 'error');
+            }
         });
         
         function mostrarViajes(viajes) {
@@ -272,70 +325,108 @@
                 viajeDiv.style.borderRadius = '4px';
                 
                 viajeDiv.innerHTML = `
-                    <h3>${viaje.origen} → ${viaje.destino}</h3>
+                    <h3>${viaje.ciudadOrigen} → ${viaje.ciudadFinal}</h3>
                     <p><strong>Fecha:</strong> ${viaje.fecha}</p>
-                    <p><strong>Hora:</strong> ${viaje.hora}</p>
-                    <p><strong>Bus:</strong> ${viaje.bus}</p>
+                    <p><strong>Hora de salida:</strong> ${viaje.hInicio}</p>
+                    <p><strong>Hora de llegada:</strong> ${viaje.hFinal}</p>
+                    <p><strong>Bus:</strong> ${viaje.placa} (${viaje.clase})</p>
                     <p><strong>Precio:</strong> S/ ${viaje.precio}</p>
-                    <button class="btn" onclick="seleccionarViaje(${viaje.id}, '${viaje.origen}', '${viaje.destino}', '${viaje.fecha}', '${viaje.hora}', ${viaje.precio}, '${viaje.bus}')">Seleccionar</button>
+                    <p><strong>Asientos disponibles:</strong> ${viaje.asientos_disponibles}</p>
+                    <p><strong>Tiempo de viaje:</strong> ${viaje.tiempoViaje}</p>
+                    <button class="btn" onclick="seleccionarViaje(${viaje.idViaje}, '${viaje.ciudadOrigen}', '${viaje.ciudadFinal}', '${viaje.fecha}', '${viaje.hInicio}', '${viaje.hFinal}', ${viaje.precio}, '${viaje.placa}', '${viaje.clase}')">Seleccionar</button>
                 `;
                 
                 listaDiv.appendChild(viajeDiv);
             });
         }
         
-        function seleccionarViaje(id, origen, destino, fecha, hora, precio, bus) {
-            viajeSeleccionado = { id, origen, destino, fecha, hora, precio, bus };
+        function seleccionarViaje(idViaje, origen, destino, fecha, hInicio, hFinal, precio, placa, clase) {
+            viajeSeleccionado = { 
+                id: idViaje, 
+                origen: origen, 
+                destino: destino, 
+                fecha: fecha, 
+                hInicio: hInicio, 
+                hFinal: hFinal, 
+                precio: precio, 
+                placa: placa, 
+                clase: clase 
+            };
             
             // Mostrar información del viaje
             document.getElementById('infoViaje').innerHTML = `
                 <h3>Viaje Seleccionado</h3>
                 <p><strong>Ruta:</strong> ${origen} → ${destino}</p>
-                <p><strong>Fecha:</strong> ${fecha} a las ${hora}</p>
-                <p><strong>Bus:</strong> ${bus}</p>
+                <p><strong>Fecha:</strong> ${fecha}</p>
+                <p><strong>Salida:</strong> ${hInicio}</p>
+                <p><strong>Llegada:</strong> ${hFinal}</p>
+                <p><strong>Bus:</strong> ${placa} (${clase})</p>
                 <p><strong>Precio por asiento:</strong> S/ ${precio}</p>
             `;
             
-            // Generar asientos simulados
-            generarAsientos();
+            // Cargar asientos reales
+            cargarAsientos(idViaje);
             mostrarSeccion('asientosSection');
         }
         
-        function generarAsientos() {
-            const grid = document.getElementById('asientosGrid');
-            grid.innerHTML = '';
-            
-            // Simular 40 asientos (10 filas x 4 columnas)
-            for (let i = 1; i <= 40; i++) {
-                const asiento = document.createElement('div');
-                asiento.className = 'asiento disponible';
-                asiento.textContent = i;
-                asiento.setAttribute('data-asiento', i);
+        async function cargarAsientos(idViaje) {
+            try {
+                const formData = new FormData();
+                formData.append('idViaje', idViaje);
                 
-                // Simular algunos asientos ocupados
-                if ([5, 12, 18, 25, 33].includes(i)) {
-                    asiento.className = 'asiento ocupado';
+                const response = await fetch('../api.php?action=obtener_asientos', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    generarAsientos(result.asientos);
                 } else {
-                    asiento.addEventListener('click', function() {
-                        toggleAsiento(i);
-                    });
+                    mostrarMensaje('Error al cargar asientos: ' + result.message, 'error');
                 }
-                
-                grid.appendChild(asiento);
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarMensaje('Error de conexión al cargar asientos', 'error');
             }
         }
         
-        function toggleAsiento(numero) {
-            const asiento = document.querySelector(`[data-asiento="${numero}"]`);
+        function generarAsientos(asientos) {
+            const grid = document.getElementById('asientosGrid');
+            grid.innerHTML = '';
+            
+            asientos.forEach(asiento => {
+                const asientoDiv = document.createElement('div');
+                asientoDiv.className = `asiento ${asiento.disponibilidad}`;
+                asientoDiv.textContent = asiento.numeroAsiento;
+                asientoDiv.setAttribute('data-asiento', asiento.idAsiento);
+                asientoDiv.setAttribute('data-numero', asiento.numeroAsiento);
+                
+                if (asiento.disponibilidad === 'disponible') {
+                    asientoDiv.addEventListener('click', function() {
+                        toggleAsiento(asiento.idAsiento, asiento.numeroAsiento);
+                    });
+                }
+                
+                grid.appendChild(asientoDiv);
+            });
+        }
+        
+        function toggleAsiento(idAsiento, numeroAsiento) {
+            const asiento = document.querySelector(`[data-asiento="${idAsiento}"]`);
             
             if (asiento.classList.contains('seleccionado')) {
                 asiento.classList.remove('seleccionado');
                 asiento.classList.add('disponible');
-                asientosSeleccionados = asientosSeleccionados.filter(a => a !== numero);
+                asientosSeleccionados = asientosSeleccionados.filter(a => a.id !== idAsiento);
             } else {
                 asiento.classList.remove('disponible');
                 asiento.classList.add('seleccionado');
-                asientosSeleccionados.push(numero);
+                asientosSeleccionados.push({
+                    id: idAsiento,
+                    numero: numeroAsiento
+                });
             }
         }
         
@@ -357,7 +448,8 @@
                 const form = document.createElement('div');
                 form.className = 'pasajero-form';
                 form.innerHTML = `
-                    <h4>Pasajero ${index + 1} - Asiento ${asiento}</h4>
+                    <h4>Pasajero ${index + 1} - Asiento ${asiento.numero}</h4>
+                    <input type="hidden" name="idAsiento_${index}" value="${asiento.id}">
                     <div class="form-group">
                         <label>Nombres:</label>
                         <input type="text" name="nombres_${index}" required>
@@ -410,16 +502,77 @@
                 return;
             }
             
-            // Simular confirmación de compra
+            // Procesar compra real
+            procesarCompraReal();
+        }
+        
+        async function procesarCompraReal() {
+            try {
+                const formData = new FormData();
+                formData.append('idViaje', viajeSeleccionado.id);
+                
+                // Recopilar datos de pasajeros
+                const pasajeros = [];
+                const asientos = [];
+                
+                asientosSeleccionados.forEach((asiento, index) => {
+                    const pasajero = {
+                        nombres: document.querySelector(`input[name="nombres_${index}"]`).value,
+                        apellidos: document.querySelector(`input[name="apellidos_${index}"]`).value,
+                        email: document.querySelector(`input[name="email_${index}"]`).value,
+                        dni: document.querySelector(`input[name="dni_${index}"]`).value,
+                        fechaNacimiento: document.querySelector(`input[name="fechaNacimiento_${index}"]`).value,
+                        sexo: document.querySelector(`select[name="sexo_${index}"]`).value
+                    };
+                    
+                    pasajeros.push(pasajero);
+                    asientos.push(asiento.id);
+                });
+                
+                formData.append('pasajeros', JSON.stringify(pasajeros));
+                formData.append('asientos', JSON.stringify(asientos));
+                
+                const response = await fetch('../api.php?action=procesar_compra', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    mostrarConfirmacionCompra(result);
+                } else {
+                    mostrarMensaje(result.message || 'Error al procesar la compra', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarMensaje('Error de conexión al procesar la compra', 'error');
+            }
+        }
+        
+        function mostrarConfirmacionCompra(result) {
             const total = viajeSeleccionado.precio * asientosSeleccionados.length;
+            const numerosAsientos = asientosSeleccionados.map(a => a.numero).join(', ');
+            
+            let ticketsHtml = '';
+            result.tickets.forEach(ticket => {
+                ticketsHtml += `<p><strong>Ticket #${ticket.idTicket}</strong> - ${ticket.nombres} ${ticket.apellidos}</p>`;
+            });
             
             document.getElementById('resumenCompra').innerHTML = `
                 <h3>¡Compra Realizada Exitosamente!</h3>
                 <p><strong>Viaje:</strong> ${viajeSeleccionado.origen} → ${viajeSeleccionado.destino}</p>
-                <p><strong>Fecha:</strong> ${viajeSeleccionado.fecha} a las ${viajeSeleccionado.hora}</p>
-                <p><strong>Asientos:</strong> ${asientosSeleccionados.join(', ')}</p>
+                <p><strong>Fecha:</strong> ${viajeSeleccionado.fecha}</p>
+                <p><strong>Salida:</strong> ${viajeSeleccionado.hInicio}</p>
+                <p><strong>Llegada:</strong> ${viajeSeleccionado.hFinal}</p>
+                <p><strong>Bus:</strong> ${viajeSeleccionado.placa} (${viajeSeleccionado.clase})</p>
+                <p><strong>Asientos:</strong> ${numerosAsientos}</p>
                 <p><strong>Total pagado:</strong> S/ ${total}</p>
-                <p><strong>Código de reserva:</strong> TR${Date.now()}</p>
+                <p><strong>Código de reserva:</strong> ${result.codigoReserva}</p>
+                <h4>Tickets generados:</h4>
+                ${ticketsHtml}
+                <p><em>Los pasajeros y tickets han sido guardados en la base de datos</em></p>
                 <button class="btn" onclick="location.reload()">Nueva Compra</button>
             `;
             
