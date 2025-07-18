@@ -174,17 +174,11 @@ class ModelForm{
         return $errors;
     }
     
-    /**
-     * Valida formato de fecha
-     */
     private function validateDate($date) {
         $d = DateTime::createFromFormat('Y-m-d', $date);
         return $d && $d->format('Y-m-d') === $date;
     }
     
-    /**
-     * Valida formato de hora
-     */
     private function validateTime($time) {
         $t = DateTime::createFromFormat('H:i:s', $time);
         if (!$t) {
@@ -194,19 +188,15 @@ class ModelForm{
         return $t && $t->format('H:i:s') === $time;
     }
     
-    /**
-     * Verifica si un valor es único en la tabla
-     */
     private function checkUnique($tableName, $field, $value, $excludeId = null) {
         $schema = $this->tableSchemas[$tableName];
         if (!isset($schema[$field]['unique']) || !$schema[$field]['unique']) {
-            return true; // No necesita ser único
+            return true; 
         }
         
         $sql = "SELECT COUNT(*) FROM $tableName WHERE $field = ?";
         $params = [$value];
         
-        // Excluir el registro actual en caso de actualización
         if ($excludeId !== null) {
             $primaryKey = $this->getPrimaryKey($tableName);
             $sql .= " AND $primaryKey != ?";
@@ -223,38 +213,31 @@ class ModelForm{
         }
     }
     
-    /**
-     * Obtiene la clave primaria de una tabla
-     */
-    private function getPrimaryKey($tableName) {
+    public function getPrimaryKey($tableName) {
         $schema = $this->tableSchemas[$tableName];
         foreach ($schema as $field => $rules) {
             if (isset($rules['primary_key']) && $rules['primary_key']) {
                 return $field;
             }
         }
-        return 'id'; // Por defecto
+        return 'id'; 
     }
-    
-    /**
-     * Inserta un registro en la tabla especificada
-     */
+
     public function insert($tableName, $data) {
         try {
-            // Validar datos
+       
             $errors = $this->validateData($tableName, $data, false);
             if (!empty($errors)) {
                 return ['success' => false, 'errors' => $errors];
             }
             
-            // Verificar unicidad
+         
             foreach ($data as $field => $value) {
                 if (!$this->checkUnique($tableName, $field, $value)) {
                     return ['success' => false, 'errors' => [$field => "El valor '$value' ya existe para el campo '$field'"]];
                 }
             }
-            
-            // Filtrar campos auto_increment
+          
             $schema = $this->tableSchemas[$tableName];
             $filteredData = [];
             foreach ($data as $field => $value) {
@@ -263,7 +246,6 @@ class ModelForm{
                 }
             }
             
-            // Preparar consulta
             $fields = array_keys($filteredData);
             $placeholders = array_fill(0, count($filteredData), '?');
             
@@ -375,9 +357,6 @@ class ModelForm{
         }
     }
     
-    /**
-     * Verifica restricciones de clave foránea antes de eliminar
-     */
     private function checkForeignKeyConstraints($tableName, $id) {
         $primaryKey = $this->getPrimaryKey($tableName);
         

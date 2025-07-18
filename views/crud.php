@@ -31,8 +31,15 @@
                         case 'getRegister':
                             $controller->select();
                             break;
-                        case 'addRow':
+                        case 'addForm':
                             $controller->tableForm();
+                            break;
+                        case 'updateRow':
+                            $data = $_POST;
+                            $controller->updateRow($data);
+                            break;
+                        case 'addRow':
+
                             break;
                         case 'app':
 

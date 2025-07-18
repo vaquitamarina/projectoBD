@@ -18,7 +18,7 @@ class formController {
         $isEditMode = !empty($editData);
         $formTitle = $isEditMode ? "Editar registro de $tableName" : "Formulario para $tableName";
         
-        $html = "<form method='POST' action='../controllers/processForm.php'>";
+        $html = "<form method='POST' action='crud.php'>";
         $html .= "<input type='hidden' name='table' value='$tableName'>";
         if ($isEditMode) {
             $html .= "<input type='hidden' name='editMode' value='true'>";
@@ -127,20 +127,16 @@ class formController {
         }
         
         $submitText = $isEditMode ? "Actualizar" : "Guardar";
-        $html .= "<button type='submit'>$submitText</button>";
+        $valueBtn = $isEditMode ? "updateRow" : "addRow";
+        $html .= "<button name='accion' value='$valueBtn' type='submit'>$submitText</button>";
         $html .= "</form>";
         
         return $html;
     }
-    
-    /**
-     * Genera un select para claves foráneas con datos de la tabla referenciada
-     */
+
     private function generateForeignKeySelect($field, $rules, $currentValue = '') {
-        // Extraer el nombre de la tabla y campo de la foreign key
         list($referencedTable, $referencedField) = explode('.', $rules['foreign_key']);
         
-        // Obtener los datos de la tabla referenciada
         $data = $this->model->getForeignKeyOptions($referencedTable, $referencedField);
         
         $html = "<select id='$field' name='$field'";
@@ -163,12 +159,6 @@ class formController {
         return $html;
     }
     
-    /**
-     * Genera texto descriptivo para mostrar en el select
-     *
-
-     * Genera texto descriptivo para mostrar en el select
-     */
     private function getDisplayText($tableName, $row) {
         switch ($tableName) {
             case 'pasajero':
@@ -184,8 +174,7 @@ class formController {
             case 'ruta':
                 return 'ID: ' . $row['idRuta'] . ' - ' . $row['ciudadFinal'];
             default:
-                // Para cualquier tabla no especificada, usar el primer campo no-ID
-                $idField = array_keys($row)[0]; // Primer campo (generalmente el ID)
+                $idField = array_keys($row)[0]; 
                 $idValue = $row[$idField];
                 
                 foreach ($row as $field => $value) {
@@ -193,10 +182,10 @@ class formController {
                         return 'ID: ' . $idValue . ' - ' . $value;
                     }
                 }
-                return 'ID: ' . $idValue; // Solo mostrar ID como fallback
+                return 'ID: ' . $idValue; 
         }
     }
 
-// ...existing code...
+
 }
 ?>

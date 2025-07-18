@@ -44,7 +44,7 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
                             <?php foreach ($fila as $campo => $valor): ?>
                                 <input type="hidden" name="editData[<?= htmlspecialchars($campo) ?>]" value="<?= htmlspecialchars($valor) ?>">
                             <?php endforeach; ?>
-                            <button type="submit" name="accion" value="addRow">Actualizar</button>
+                            <button type="submit" name="accion" value="addForm">Actualizar</button>
                         </form>
                     </td>
                 </tr>
@@ -53,12 +53,12 @@ if (isset($registros) && is_array($registros) && !empty($registros)): ?>
     </table>
     <form method="post" action="crud.php">
         <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>"> 
-        <button type="submit" name="accion" value="addRow" >Añadir fila</button>
+        <button type="submit" name="accion" value="addForm" >Añadir fila</button>
     </form>
 <?php elseif (isset($_POST['selectedTable']) && !empty($_POST['selectedTable'])): ?>
     <p>No se encontraron registros en la tabla seleccionada.</p>
     <form method="post" action="crud.php">
         <input type="hidden" name="insertTable" value="<?= htmlspecialchars($_POST['selectedTable']) ?>"> 
-        <button type="submit" name="accion" value="addRow" >Añadir fila</button>
+        <button type="submit" name="accion" value="addForm" >Añadir fila</button>
     </form>
 <?php endif; ?>

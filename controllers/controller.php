@@ -1,10 +1,13 @@
 <?php
 require_once("../models/model.php");
+require_once("../models/modelForm.php");
 
 class ModelController{
     private $model;
+    private $modelForm;
     function __construct(){
         $this->model = new Modelo();
+        $this->modelForm = new ModelForm();
     }
     public function renderView($viewName, $data = null, $registros = null){
         if (file_exists("{$viewName}.php")) {
@@ -31,26 +34,55 @@ class ModelController{
         $table = $_POST['insertTable'];
         $this->renderView("form", $table);
     }
+    public function addRow($data){
+        $tableName = $data['table'];
+        unset($data['editMode']);
+    }
+    public function updateRow($data){
+        $tableName = $data['table'];
+        $primaryKey = $this->modelForm->getPrimaryKey($tableName);
+        $id = $data[$primaryKey];
 
-    public function addRow(){
-        $table = $_POST['insertTable'];
-        $row = $_POST;
-        unset($row['insertTable']);
-        unset($row['accion']);
-        $column = array_keys($row);
-        $row = array_values($row);
-        $result = $this->model->insert($table, $column, $row);
-        if ($result) {
-            // Mensaje de éxito en sesión
-            echo "<script>alert('Registro insertado correctamente');</script>";
-            header("Location: http://localhost/proyectobd/views/crud.php?action=select&table=" . urlencode($table));
-        } else {
-            // Mensaje de error en sesión
-            echo "<script>alert('Error al insertar el registro');</script>";
-            header("Location: http://localhost/proyectobd/views/crud.php?action=select");
+        $values = $data;
+        unset($values['editMode']);
+        unset($values['table']);
+        unset($values[$primaryKey]);
+        unset($values['accion']);
+
+        $result = $this->modelForm->update($tableName, $values, $id);
+    
+    if ($result && isset($result['success']) && $result['success']) {
+        // Redirigir a crud.php con POST para mostrar la tabla actualizada
+        echo "<script>
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'crud.php';
+            
+            const tableField = document.createElement('input');
+            tableField.type = 'hidden';
+            tableField.name = 'selectedTable';
+            tableField.value = '" . htmlspecialchars($tableName) . "';
+            form.appendChild(tableField);
+            
+            const actionField = document.createElement('input');
+            actionField.type = 'hidden';
+            actionField.name = 'accion';
+            actionField.value = 'getRegister';
+            form.appendChild(actionField);
+            
+            document.body.appendChild(form);
+            form.submit();
+        </script>";
+        exit;
+    } else {
+        echo "Error en la actualización";
+        if (isset($result['errors'])) {
+            print_r($result['errors']);
         }
-        exit();          
-    }    
+        $this->renderView("form", $tableName);
+    }
+
+    }
 }
 
 ?>
