@@ -138,7 +138,6 @@ button:hover{
     background-color: #1c1b20;
     color:#f0f0f0;
     border: 2px solid #ffffff;
-    transform: scale(1.03);
 }
 
 ::-webkit-scrollbar {
