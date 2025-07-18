@@ -310,45 +310,91 @@ class ModelForm{
     }
     
  
-    public function delete($tableName, $id) {
+    
+public function delete($tableName, $id) {
+    try {
+        $primaryKey = $this->getPrimaryKey($tableName);
+        
+        // Verificar si el registro existe
+        $checkSql = "SELECT COUNT(*) FROM $tableName WHERE $primaryKey = ?";
+        $checkStmt = $this->db->prepare($checkSql);
+        $checkStmt->execute([$id]);
+        
+        if ($checkStmt->fetchColumn() == 0) {
+            return ['success' => false, 'errors' => ['not_found' => 'El registro no existe']];
+        }
+        
+        // Iniciar transacción para rollback en caso de error
+        $this->db->beginTransaction();
+        
         try {
-            $primaryKey = $this->getPrimaryKey($tableName);
+            // Eliminar registros relacionados primero
+            $this->deleteRelatedRecords($tableName, $id);
             
-            // Verificar si el registro existe
-            $checkSql = "SELECT COUNT(*) FROM $tableName WHERE $primaryKey = ?";
-            $checkStmt = $this->db->prepare($checkSql);
-            $checkStmt->execute([$id]);
-            
-            if ($checkStmt->fetchColumn() == 0) {
-                return ['success' => false, 'errors' => ['not_found' => 'El registro no existe']];
-            }
-            
-            // Verificar restricciones de clave foránea antes de eliminar
-            if (!$this->checkForeignKeyConstraints($tableName, $id)) {
-                return ['success' => false, 'errors' => ['foreign_key' => 'No se puede eliminar el registro porque está siendo referenciado por otros registros']];
-            }
-            
+            // Eliminar el registro principal
             $sql = "DELETE FROM $tableName WHERE $primaryKey = ?";
             $stmt = $this->db->prepare($sql);
             $result = $stmt->execute([$id]);
             
             if ($result) {
-                return ['success' => true, 'message' => 'Registro eliminado correctamente'];
+                $this->db->commit();
+                return ['success' => true, 'message' => 'Registro y registros relacionados eliminados correctamente'];
             } else {
+                $this->db->rollback();
                 return ['success' => false, 'errors' => ['database' => 'Error al eliminar el registro']];
             }
             
-        } catch (PDOException $e) {
-            error_log("Error en delete: " . $e->getMessage());
-            
-            // Verificar si es un error de clave foránea
-            if ($e->getCode() == '23000') {
-                return ['success' => false, 'errors' => ['foreign_key' => 'No se puede eliminar el registro porque está siendo referenciado por otros registros']];
-            }
-            
-            return ['success' => false, 'errors' => ['database' => 'Error de base de datos: ' . $e->getMessage()]];
+        } catch (Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+        
+    } catch (PDOException $e) {
+        error_log("Error en delete: " . $e->getMessage());
+        return ['success' => false, 'errors' => ['database' => 'Error de base de datos: ' . $e->getMessage()]];
+    }
+}
+
+private function deleteRelatedRecords($tableName, $id) {
+    $dependencies = [
+        'usuario' => [
+            ['table' => 'ticket', 'field' => 'idUsuario']
+        ],
+        'pasajero' => [
+            ['table' => 'ticket', 'field' => 'idPasajero']
+        ],
+        'bus' => [
+            ['table' => 'asiento', 'field' => 'idBus'],
+            ['table' => 'trabajadorbus', 'field' => 'idBus'],
+            ['table' => 'viajebus', 'field' => 'idBus']
+        ],
+        'trabajador' => [
+            ['table' => 'boletero', 'field' => 'idTrabajador'],
+            ['table' => 'trabajadorbus', 'field' => 'idTrabajador'],
+            ['table' => 'chofer', 'field' => 'idTrabajador'],
+            ['table' => 'terramozo', 'field' => 'idTrabajador']
+        ],
+        'viaje' => [
+            ['table' => 'ticket', 'field' => 'idViaje'],
+            ['table' => 'viajeruta', 'field' => 'idViaje'],
+            ['table' => 'viajebus', 'field' => 'idViaje']
+        ],
+        'asiento' => [
+            ['table' => 'ticket', 'field' => 'idAsiento']
+        ],
+        'ruta' => [
+            ['table' => 'viajeruta', 'field' => 'idRuta']
+        ]
+    ];
+    
+    if (isset($dependencies[$tableName])) {
+        foreach ($dependencies[$tableName] as $dependency) {
+            $sql = "DELETE FROM {$dependency['table']} WHERE {$dependency['field']} = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$id]);
         }
     }
+}
     
     private function checkForeignKeyConstraints($tableName, $id) {
         $primaryKey = $this->getPrimaryKey($tableName);
