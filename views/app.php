@@ -138,7 +138,7 @@
         <!-- Área de mensajes -->
         <div id="mensajes"></div>
         <footer>
-            <a class="button-return" href="../index.php">Volver</a>
+            <a class="button-return" href="../index.php">Inicio</a>
         </footer>
     </div>
 

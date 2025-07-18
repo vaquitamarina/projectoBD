@@ -58,7 +58,8 @@
             ?>
         </main>
         <footer>
-            <a class="button-return" href="../index.php">Volver</a>
+            <a class="button-return" href="crud.php">Volver</a>
+            <a class="button-return" href="../index.php">Inicio</a>
         </footer>
     </div>
 </body>
